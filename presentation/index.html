@@ -10,6 +10,7 @@
     --purple-dark: #460073;
     --ink: #0A0014;
     --rose: #FF50A0;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   }
   * { box-sizing: border-box; }
   body {
@@ -101,7 +102,13 @@
   .limiti .sez-num { color: var(--rose); }
   .limiti .bullets li::before { content: "×"; color: var(--rose); }
 
-  .nomi { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; color: var(--purple-light); }
+  .nomi { font-family: var(--mono); font-size: 13px; color: var(--purple-light); }
+  .cmd {
+    font-family: var(--mono); font-size: 13px; line-height: 1.7;
+    border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035);
+    border-radius: 10px; padding: 14px 16px; margin: 0 0 12px;
+    color: rgba(255,255,255,0.88); overflow-x: auto;
+  }
 
   footer { text-align: center; margin-top: 44px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(255,255,255,0.25); }
   footer .mark { color: var(--purple); }
@@ -304,6 +311,44 @@
   </section>
 
   <!-- 6 -->
+  <section class="sez">
+    <div class="sez-head">
+      <div class="sez-num">Come si prova</div>
+      <h2>Due minuti, nessuna installazione</h2>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>L'applicazione</h3>
+        <pre class="cmd">cd app
+python3 -m http.server 4173</pre>
+        <p class="sottotono">
+          Poi <span class="nomi">localhost:4173</span>. Nessun `npm install`,
+          nessuna chiave: il progetto non ha dipendenze.
+        </p>
+      </div>
+      <div>
+        <h3>I test</h3>
+        <pre class="cmd">cd app
+node --test tests/</pre>
+        <p class="sottotono">
+          47 test, offline, meno di un secondo. Fra cui il valore canonico
+          ΔE2000 bianco/nero = 100, come riferimento esterno.
+        </p>
+      </div>
+    </div>
+
+    <h4>e gli strumenti girano davvero</h4>
+    <pre class="cmd">node tools/verifica-palette.mjs "#2E7D32" "#C62828"
+  → distanza 63 reale → 6.8 percepita · 1 coppia resa indistinguibile</pre>
+    <p class="sottotono">
+      Verde «disponibile» contro rosso «esaurito»: la codifica più diffusa
+      negli e-commerce, e due stati opposti che diventano lo stesso colore.
+      Lo stesso motore, puntato dall'altro lato — su chi progetta, non su chi compra.
+    </p>
+  </section>
+
+  <!-- 7 -->
   <section class="sez limiti">
     <div class="sez-head">
       <div class="sez-num">Limiti e rischi</div>
