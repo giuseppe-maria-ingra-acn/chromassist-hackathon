@@ -6,6 +6,19 @@
  * solleva SecurityError. Funziona solo se il server manda header CORS
  * permissivi — da verificare per ogni catalogo nuovo.
  */
+/**
+ * Distanza RGB entro cui due tinte si considerano la stessa, ombreggiata.
+ * Tarata su fotografie di catalogo reali.
+ */
+const VICINANZA_TINTA = 60;
+
+/**
+ * Quota minima di pixel che devono stare attorno alla tinta dominante
+ * perché il capo si consideri monocolore. Misurato sul campo: i capi a
+ * tinta unita stanno fra 76% e 99%.
+ */
+const COESIONE_MINIMA = 0.55;
+
 export function campionaImmagine(url) {
   return new Promise((risolvi) => {
     const im = new Image();
@@ -47,15 +60,52 @@ export function campionaImmagine(url) {
         }
         if (!considerati) return risolvi(null);
 
-        const ordinati = [...bucket.values()].sort((a, b) => b[3] - a[3]);
-        const top = ordinati[0];
-        const quota = top[3] / considerati;
+        /*
+         * Si cerca il colore attorno al quale si concentra PIU MASSA, non il
+         * gruppo di pixel più numeroso.
+         *
+         * La differenza è decisiva su una fotografia indossata. Misurato su
+         * una giacca beige fotografata su modello: il capo intimo scuro forma
+         * un unico gruppo compatto al 27% dei pixel, mentre il beige della
+         * giacca è spezzato dall'ombreggiatura in nove gruppi che valgono
+         * insieme il 50%. Ancorandosi al gruppo più numeroso si otteneva nero
+         * su un capo beige.
+         *
+         * Per ogni candidato si misura la massa che gli sta intorno, e vince
+         * quello con l'intorno più pesante. I candidati sotto il 2% si
+         * ignorano: sono riflessi e dettagli, e valutarli tutti costerebbe
+         * tempo senza cambiare l'esito.
+         */
+        const gruppi = [...bucket.values()]
+          .map((e) => ({ colore: [0, 1, 2].map((i) => Math.round(e[i] / e[3])), peso: e[3] }))
+          .sort((a, b) => b.peso - a.peso);
+
+        const intorno = (riferimento) => {
+          let peso = 0;
+          const somma = [0, 0, 0];
+          for (const g of gruppi) {
+            const distanza = Math.hypot(
+              g.colore[0] - riferimento[0],
+              g.colore[1] - riferimento[1],
+              g.colore[2] - riferimento[2]
+            );
+            if (distanza >= VICINANZA_TINTA) continue;
+            peso += g.peso;
+            for (let i = 0; i < 3; i++) somma[i] += g.colore[i] * g.peso;
+          }
+          return { peso, colore: somma.map((v) => Math.round(v / peso)) };
+        };
+
+        const candidati = gruppi.filter((g) => g.peso / considerati >= 0.02).slice(0, 25);
+        const vincente = (candidati.length ? candidati : [gruppi[0]])
+          .map((g) => intorno(g.colore))
+          .sort((a, b) => b.peso - a.peso)[0];
 
         risolvi({
-          hex: '#' + [0, 1, 2].map((i) => Math.round(top[i] / top[3]).toString(16).padStart(2, '0')).join('').toUpperCase(),
-          // nessun colore dominante: il capo è fantasia o multicolore.
+          hex: '#' + vincente.colore.map((v) => v.toString(16).padStart(2, '0')).join('').toUpperCase(),
+          // Nessuna tinta prevalente: il capo è fantasia o multicolore.
           // Va dichiarato, non mediato in un valore privo di senso.
-          multicolore: quota < 0.3
+          multicolore: vincente.peso / considerati < COESIONE_MINIMA
         });
       } catch {
         risolvi(null);

@@ -21,6 +21,11 @@ class SenzaCache(SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
         self.send_header("Pragma", "no-cache")
         self.send_header("Expires", "0")
+        # Permette a uno script iniettato in una pagina di un'altra origine
+        # (l'esperimento dell'overlay su catalogo reale) di importare i moduli
+        # di calcolo da qui. Un import ES cross-origin è sottoposto a CORS
+        # come una fetch: senza questa intestazione fallisce.
+        self.send_header("Access-Control-Allow-Origin", "*")
         super().end_headers()
 
     def log_message(self, formato, *argomenti):

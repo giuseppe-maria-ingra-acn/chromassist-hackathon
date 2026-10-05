@@ -9,21 +9,106 @@ distingue ha come unica fonte il nome — e i nomi sono `forest night`,
 reale, e il colore reale in come quella persona lo percepirà, segnalando quali
 varianti le risulteranno indistinguibili.
 
-## Avvio
+## Da dove si comincia
 
-Nessuna installazione, nessuna chiave, nessun servizio esterno.
+### Cosa serve avere installato
+
+| | Versione | Verifica |
+|---|---|---|
+| **Node** | 20 o successiva | `node --version` |
+| **Python 3** | qualunque | `python3 --version` |
+
+Su macOS e sulle distribuzioni Linux recenti sono già presenti entrambi. Non
+serve nient'altro.
+
+### Non c'è nulla da installare
+
+Il progetto ha **zero dipendenze**: nessun `npm install`, nessun `node_modules`,
+nessun passo di compilazione. È una scelta, non una mancanza — uno strumento di
+accessibilità che pretende di configurare un ambiente è uno strumento peggiore.
+Si apre e funziona.
+
+### 1. Scarica il progetto
+
+```bash
+git clone <url-del-repository>
+cd chromassist-hackathon
+```
+
+### 2. Avvia l'applicazione
 
 ```bash
 cd app
-python3 -m http.server 4173
-# poi apri http://localhost:4173
+python3 serve.py
 ```
 
-I test non richiedono nulla oltre a Node:
+Deve comparire:
+
+```
+ChromAssist su http://localhost:4173  (cache disattivata)
+Ctrl+C per fermare
+```
+
+Lascia quel terminale aperto e apri **http://localhost:4173** nel browser.
+
+### 3. Cosa vedi, e cosa fare
+
+Lo schermo è diviso in due.
+
+**A sinistra** una scheda prodotto: una giacca con **otto pallini colore**, nomi
+commerciali come `burgundy crush` e `new taupe green`. Riproduce una scheda
+reale, comprese le quattro codifiche diverse con cui i cataloghi esprimono il
+colore nel markup.
+
+**A destra** ChromAssist, che chiede come vedi i colori.
+
+Prova questo percorso:
+
+| | Cosa fare | Cosa deve succedere |
+|---|---|---|
+| 1 | Clicca la **seconda riga** del test — *«rosso vinaccia e verde tortora»* | La casella si spunta di viola, lo sfondo diventa lilla, compare `UGUALI`, e il pulsante diventa **Analizza la pagina (1)** |
+| 2 | Clicca **Analizza la pagina (1)** | Il test scompare, appare l'esito |
+| 3 | — | Riquadro **arancione**: *«Queste due ti appariranno uguali»*, con `burgundy crush` e `new taupe green` e la distanza `29 nella realtà → 4.9 come li vedi tu` |
+| 4 | Trascina il cursore **tutto a sinistra** | L'avviso diventa verde: a severità zero nessun colore collassa |
+| 5 | Trascinalo **verso destra** | L'avviso arancione ricompare e il numero della distanza percepita scende |
+| 6 | Clicca una variante sotto **«Queste le distingui»** | Si apre il dettaglio: nome del venditore, colore reale, colore percepito |
+
+**Il passo 5 è il punto del progetto.** Guarda le due file di pallini in fondo:
+sopra come li vede chi non ha difficoltà, sotto come li vede l'utente.
+Muovendo il cursore, due pallini che sopra sono chiaramente diversi diventano
+sotto lo stesso colore.
+
+### 4. Esegui i test
+
+In un altro terminale:
 
 ```bash
-cd app && node --test tests/
+cd app
+node --test tests/
 ```
+
+Devono passare **53 test** in meno di un secondo, senza rete e senza
+credenziali.
+
+### 5. Gli strumenti da riga di comando
+
+```bash
+# quali colori diventano indistinguibili, dato un profilo
+node app/scripts/confusion.mjs deuteranomalia 0.9
+
+# una palette resta leggibile a chi ha una CVD?
+node tools/verifica-palette.mjs "#2E7D32" "#C62828"
+```
+
+Il secondo è l'esempio che si incontra davvero: verde «disponibile» contro
+rosso «esaurito» distano 63 nella realtà e **6.8** per chi ha una deficienza
+rosso-verde.
+
+### 6. Su una pagina di catalogo vera
+
+C'è una versione che gira **dentro** la pagina di un negozio online reale,
+invece che sulla scheda di esempio. Istruzioni separate in
+[`experiments/README.md`](experiments/README.md).
 
 ## Come funziona
 
@@ -193,6 +278,18 @@ valori fino a far tacere lo strumento.
   per una parte dei contributori non è un vincolo
 - l'avvio effettivo degli strumenti, per impedire che diventino decorativi
 - la verifica che gli hook si comportino come dichiarato
+
+## Su un catalogo reale
+
+L'applicazione legge una scheda prodotto da un iframe della stessa origine.
+Per farla funzionare su un sito vero serve l'opposto — uno script che gira
+**dentro** quella pagina, perché il browser vieta di leggere il DOM di un
+iframe di un'altra origine.
+
+`experiments/` contiene quella forma: un file autonomo da incollare nella
+console di una scheda prodotto, che riusa gli stessi moduli di calcolo.
+Verificato su tre pagine reali diverse. Istruzioni in
+`experiments/README.md`.
 
 ## Limiti
 
