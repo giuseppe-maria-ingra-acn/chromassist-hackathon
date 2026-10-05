@@ -323,8 +323,11 @@ const STILE = `
         Profilo: <strong>${ETICHETTE[prof].breve}</strong> &middot; ${ETICHETTE[prof].nota}
       </div>
       <div class="cursore">
-        <label><span>Quanto &egrave; marcata</span><span>${sev === 0 ? 'nessuna' : Math.round(sev * 100) + '%'}</span></label>
+        <label><span>Quanto &egrave; marcata la tua difficolt&agrave;</span><span>${sev === 0 ? 'nessuna' : Math.round(sev * 100) + '%'}</span></label>
         <input type="range" min="0" max="1" step="0.05" value="${sev}" id="sev">
+        <div class="limite">${sev === 0
+          ? 'A zero &egrave; la visione senza difficolt&agrave;. Spostalo a destra per vedere come apparirebbe questa pagina a chi ne ha una.'
+          : 'Il daltonismo non &egrave; acceso o spento: la maggior parte delle persone sta nel mezzo. Se gli avvisi non corrispondono a come vedi davvero, correggi qui.'}</div>
       </div>
       <h2>Attenzione</h2>
       <div id="avvisi"></div>

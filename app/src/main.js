@@ -253,7 +253,9 @@ function fila(etichetta, colori) {
 function costruisciCursore(sezione, profiloPredefinito) {
   const box = document.createElement('div');
   box.className = 'cursore';
-  box.innerHTML = `<label><span>Quanto è marcata</span><span id="valore"></span></label>`;
+  // L'etichetta deve dire marcata COSA: senza un riferimento il cursore
+  // non si capisce, e chi lo usa non sa in che direzione muoverlo.
+  box.innerHTML = `<label><span>Quanto è marcata la tua difficoltà</span><span id="valore"></span></label>`;
   const range = document.createElement('input');
   range.type = 'range';
   range.min = '0'; range.max = '1'; range.step = '0.05';
@@ -265,6 +267,13 @@ function costruisciCursore(sezione, profiloPredefinito) {
   });
   box.append(range);
   sezione.append(box);
+  const aiuto = document.createElement('div');
+  aiuto.className = 'aiuto';
+  aiuto.textContent = stato.severita === 0
+    ? 'A zero è la visione senza difficoltà. Spostalo a destra per vedere come apparirebbe questa pagina a chi ne ha una.'
+    : 'Il daltonismo non è acceso o spento: la maggior parte delle persone sta nel mezzo. Se gli avvisi non corrispondono a come vedi davvero, correggi qui.';
+  box.append(aiuto);
+
   const v = box.querySelector('#valore');
   v.textContent = stato.severita === 0 ? 'nessuna difficoltà' : `${Math.round(stato.severita * 100)}%`;
 }
