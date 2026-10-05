@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="it">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ChromAssist</title>
+<style>
+  :root{
+    --nero:#000; --bianco:#fff; --grigio:#96968C; --avorio:#E6E6DC;
+    --viola:#A100FF; --viola-medio:#7500C0; --viola-scuro:#460073;
+    --lilla:#BE82FF; --lilla-chiaro:#DCAFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:17px/1.6 Graphik,'Helvetica Neue',Arial,sans-serif;color:var(--nero);background:var(--bianco)}
+  .sez{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+       padding:7vh 9vw;border-bottom:1px solid var(--avorio);scroll-snap-align:start}
+  html{scroll-snap-type:y proximity;scroll-behavior:smooth}
+  .num{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--viola);
+       font-weight:600;margin-bottom:18px}
+  h1{font-size:clamp(44px,7vw,86px);line-height:1.02;letter-spacing:-.035em;font-weight:700}
+  h2{font-size:clamp(30px,4.2vw,52px);line-height:1.08;letter-spacing:-.025em;
+     font-weight:700;margin-bottom:26px;max-width:17ch}
+  p{font-size:clamp(17px,1.5vw,21px);max-width:62ch;color:#2a2a2e}
+  p+p{margin-top:16px}
+  .occhiello{color:var(--grigio);font-size:19px;margin-top:22px;max-width:52ch}
+
+  .scura{background:var(--nero);color:var(--bianco)}
+  .scura h2,.scura h1{color:var(--bianco)}
+  .scura p{color:#d6d6d2}
+  .scura .num{color:var(--lilla)}
+
+  .cifra{font-size:clamp(64px,10vw,130px);font-weight:700;letter-spacing:-.04em;
+         line-height:1;color:var(--viola)}
+  .cifra small{display:block;font-size:19px;font-weight:400;letter-spacing:0;
+               color:var(--grigio);margin-top:14px;max-width:34ch}
+
+  .duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:34px;margin-top:38px}
+  .carta{border-left:3px solid var(--viola);padding:4px 0 4px 20px}
+  .carta h3{font-size:18px;font-weight:600;margin-bottom:7px}
+  .carta p{font-size:16px;color:#55555c}
+  .scura .carta{border-color:var(--lilla)}
+  .scura .carta p{color:#b5b5b0}
+
+  .prova{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin:40px 0 10px}
+  .capo{text-align:center}
+  .pallino{width:84px;height:84px;border-radius:50%;border:1px solid rgba(0,0,0,.12);margin:0 auto 10px}
+  .scura .pallino{border-color:rgba(255,255,255,.2)}
+  .capo em{font-style:normal;font-size:14px;color:var(--grigio);display:block}
+  .capo b{font-size:15px;font-weight:600;display:block;margin-bottom:3px}
+  .freccia{font-size:28px;color:var(--grigio)}
+  .didascalia{font-size:15px;color:var(--grigio);margin-top:8px}
+
+  ul{margin-top:22px;max-width:60ch}
+  li{font-size:18px;margin-bottom:13px;list-style:none;padding-left:26px;position:relative;color:#2a2a2e}
+  li::before{content:'';position:absolute;left:0;top:11px;width:9px;height:9px;background:var(--viola)}
+  .scura li{color:#d6d6d2}
+  .scura li::before{background:var(--lilla)}
+
+  .chiusura{font-size:clamp(24px,3vw,38px);font-weight:700;letter-spacing:-.02em;
+            line-height:1.25;max-width:20ch;margin-top:30px}
+</style>
+
+<!-- 1 — copertina -->
+<section class="sez scura">
+  <h1>Chrom<span style="color:var(--lilla)">Assist</span></h1>
+  <p class="occhiello" style="font-size:23px;max-width:40ch">
+    Un uomo su dodici non distingue certi colori.
+    Gli e-commerce glieli vendono con un pallino colorato e un nome inventato.
+  </p>
+</section>
+
+<!-- 2 — il problema -->
+<section class="sez">
+  <div class="num">Il problema</div>
+  <h2>Il colore non è scritto da nessuna parte</h2>
+  <div class="cifra">1 su 12
+    <small>uomini con una deficienza della visione dei colori. Una donna su 200.
+    Circa 350 milioni di persone.</small>
+  </div>
+  <p style="margin-top:34px">
+    Su una scheda prodotto il colore si sceglie da pallini senza etichetta.
+    Chi non li distingue ha come unica fonte il nome — e i nomi sono
+    <strong>forest night</strong>, <strong>magnet/pebble</strong>, <strong>streamsong</strong>.
+  </p>
+  <p>
+    Abbiamo analizzato 96 capi di un catalogo reale: 54 nomi colore diversi,
+    nessun valore leggibile da una macchina, e un prodotto chiamato
+    <strong>black</strong> che nella foto è marrone.
+  </p>
+</section>
+
+<!-- 3 — l'utente -->
+<section class="sez">
+  <div class="num">L'utente</div>
+  <h2>Marco, 34 anni, vuole comprare una giacca</h2>
+  <p>
+    Sa di «vedere male i colori» perché glielo dissero alla visita per la patente.
+    Non sa cosa significhi <em>deuteranomalia</em> e non gliene importa.
+  </p>
+  <p>
+    Apre la scheda. Otto pallini, due identici fra loro. Legge i nomi:
+    <strong>burgundy crush</strong> e <strong>new taupe green</strong>. Non lo aiutano.
+  </p>
+  <div class="duo">
+    <div class="carta"><h3>Tira a indovinare</h3><p>E poi fa un reso.</p></div>
+    <div class="carta"><h3>Chiede a qualcuno</h3><p>Ogni volta che compra.</p></div>
+    <div class="carta"><h3>Rinuncia</h3><p>E va in negozio.</p></div>
+  </div>
+</section>
+
+<!-- 4 — come funziona -->
+<section class="sez scura">
+  <div class="num">Come funziona</div>
+  <h2>Due traduzioni, in sequenza</h2>
+  <div class="duo">
+    <div class="carta">
+      <h3>Dal nome commerciale al colore vero</h3>
+      <p>«new taupe green» diventa <strong>verde tortora</strong>.
+         Il colore si ricava dalla fotografia, perché nella pagina non c'è.
+         Utile a chiunque, non solo a Marco.</p>
+    </div>
+    <div class="carta">
+      <h3>Dal colore vero a quello percepito</h3>
+      <p>Quel verde tortora, per Marco, è <strong>indistinguibile</strong>
+         dal rosso vinaccia della variante accanto. E glielo diciamo.</p>
+    </div>
+  </div>
+
+  <div class="prova">
+    <div class="capo"><div class="pallino" style="background:#9A2645"></div>
+      <b>burgundy crush</b><em>rosso vinaccia</em></div>
+    <div class="capo"><div class="pallino" style="background:#6B6454"></div>
+      <b>new taupe green</b><em>verde tortora</em></div>
+    <span class="freccia">→</span>
+    <div class="capo"><div class="pallino" style="background:#6D5944"></div>
+      <b>come li vede Marco</b><em>lo stesso colore</em></div>
+  </div>
+  <p class="didascalia">
+    Distanza fra i due colori: <strong style="color:#fff">29,5</strong> nella realtà,
+    <strong style="color:#fff">7,5</strong> come li vede lui. Il nome del venditore
+    resta sempre scritto: aggiungiamo, non riscriviamo.
+  </p>
+</section>
+
+<!-- 5 — dove interviene l'AI -->
+<section class="sez">
+  <div class="num">Dove interviene l'intelligenza artificiale</div>
+  <h2>Nel costruirlo, non nell'usarlo</h2>
+  <p>
+    L'applicazione finita <strong>non chiama nessun servizio</strong>: nessuna chiave,
+    nessun costo, nessuna connessione. Si apre e funziona.
+  </p>
+  <p>
+    Per uno strumento di accessibilità è una qualità, non un limite: una persona
+    daltonica non deve procurarsi delle credenziali per sapere di che colore è una giacca.
+    E la risposta è istantanea, perché è un calcolo.
+  </p>
+  <div class="duo">
+    <div class="carta">
+      <h3>L'AI ha indagato</h3>
+      <p>Un agente ha ispezionato i cataloghi veri e riportato dove si nasconde
+         il colore. Da lì sono nati i lettori di pagina.</p>
+    </div>
+    <div class="carta">
+      <h3>L'AI ha verificato</h3>
+      <p>Un secondo agente ha controllato la matematica contro valori di
+         riferimento pubblicati.</p>
+    </div>
+    <div class="carta">
+      <h3>L'AI ha riletto i testi</h3>
+      <p>Un terzo ha riletto ogni frase dal punto di vista di chi non vede i
+         colori di cui si parla.</p>
+    </div>
+  </div>
+  <p class="occhiello">
+    Gli strumenti sono stati scritti prima del codice, e usati per scriverlo.
+    La cronologia del progetto lo mostra.
+  </p>
+</section>
+
+<!-- 6 — il miglioramento -->
+<section class="sez">
+  <div class="num">Il miglioramento</div>
+  <h2>Cosa cambia per Marco</h2>
+  <ul>
+    <li>Non ordina il colore sbagliato, e non fa il reso.</li>
+    <li>Non deve chiedere a nessuno di guardare il suo schermo.</li>
+    <li>Non rinuncia a comprare online.</li>
+    <li>Sa <strong>come si chiama davvero</strong> il colore che sta comprando.</li>
+  </ul>
+  <p class="chiusura">
+    E con un cursore può far vedere agli altri come li vede lui.<br>
+    Per la prima volta può mostrarlo, invece di spiegarlo.
+  </p>
+</section>
+
+<!-- 7 — limiti -->
+<section class="sez scura">
+  <div class="num">Limiti e rischi</div>
+  <h2>Cosa questo strumento non fa</h2>
+  <ul>
+    <li><strong>Il colore è stimato da una fotografia</strong>, non misurato sul tessuto:
+        dipende da luce, post-produzione e compressione. Serve a capire se due opzioni
+        si confondono, non a certificare una tinta.</li>
+    <li><strong>Un capo multicolore rompe l'ipotesi</strong> del colore dominante.
+        Quando accade lo dichiariamo, invece di inventare un valore.</li>
+    <li><strong>Le soglie sono una media statistica</strong>, non la vista di una
+        persona precisa. Per questo il cursore resta in mano all'utente.</li>
+    <li><strong>Non decide al posto suo.</strong> Mostra, spiega, e si ferma:
+        la scelta resta di chi compra.</li>
+  </ul>
+</section>
