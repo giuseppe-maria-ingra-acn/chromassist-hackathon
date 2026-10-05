@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+  <defs>
+    <pattern id="t" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="8" height="8" fill="#9A2645"/>
+      <rect width="8" height="3" fill="#86203C" opacity="0.55"/>
+    </pattern>
+  </defs>
+  <rect width="160" height="160" fill="#f4f4f2"/>
+  <rect x="18" y="12" width="124" height="136" rx="10" fill="url(#t)"/>
+</svg>

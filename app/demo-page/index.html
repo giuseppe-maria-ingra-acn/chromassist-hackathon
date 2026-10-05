@@ -1,0 +1,88 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>W QUEST JACKET - Giacca hard shell - burgundy crush</title>
+<!--
+  Scheda prodotto di riferimento.
+
+  Riproduce fedelmente la situazione di un catalogo reale: il colore delle
+  varianti è codificato in modi DIVERSI fra loro, e per due varianti non
+  esiste affatto nel markup — vive solo nei pixel della fotografia.
+  Nomi e colori sono quelli misurati sulle foto del catalogo originale.
+-->
+<style>
+  :root { --bordo:#e3e3de; --testo:#15151a; --tenue:#73737d; }
+  * { box-sizing:border-box }
+  body { margin:0; font:15px/1.5 -apple-system,'Helvetica Neue',Arial,sans-serif; color:var(--testo); background:#fff }
+  .scheda { padding:22px 24px 30px }
+  .marca { font-weight:700; letter-spacing:.02em }
+  h1 { font-size:19px; font-weight:400; margin:2px 0 10px; color:var(--tenue) }
+  .prezzo { font-size:21px; font-weight:700; margin-bottom:22px }
+  .etichetta { font-size:12px; text-transform:uppercase; letter-spacing:.09em; color:var(--tenue); margin-bottom:9px }
+  .selezionato { font-size:14px; margin-bottom:12px }
+  .swatch-riga { display:flex; flex-wrap:wrap; gap:10px }
+  .swatch { width:46px; height:46px; border-radius:50%; border:1px solid var(--bordo);
+            cursor:pointer; background-size:cover; background-position:center; padding:0 }
+  .swatch[aria-pressed="true"] { outline:2px solid var(--testo); outline-offset:2px }
+  .nota { margin-top:26px; padding-top:16px; border-top:1px solid var(--bordo); font-size:13px; color:var(--tenue) }
+  /* il colore di "estate blue" vive qui, non nel markup della variante */
+  .sw--estate-blue { background-color:#143775 }
+</style>
+
+<div class="scheda">
+  <div class="marca">The North Face</div>
+  <h1 data-product-title="">W QUEST JACKET - Giacca hard shell - burgundy crush</h1>
+  <div class="prezzo">189,95 €</div>
+
+  <div class="etichetta">Colore</div>
+  <div class="selezionato">Colore attualmente selezionato: <strong>burgundy crush</strong></div>
+
+  <div class="swatch-riga" role="group" aria-label="Scelta del colore">
+    <!-- due varianti SENZA esadecimale nel markup: solo nome e fotografia.
+         Il colore esiste unicamente nei pixel, come sul catalogo vero. -->
+    <button class="swatch" data-variant="burgundy crush"
+            data-image="img/burgundy-crush.svg"
+            style="background-image:url('img/burgundy-crush.svg')"
+            aria-label="burgundy crush" aria-pressed="true"></button>
+    <button class="swatch" data-variant="new taupe green"
+            data-image="img/new-taupe-green.svg"
+            style="background-image:url('img/new-taupe-green.svg')"
+            aria-label="new taupe green" aria-pressed="false"></button>
+
+    <!-- colore in un attributo dati, senza cancelletto -->
+    <button class="swatch" data-variant="garnet" data-colour-hex="AB8877" aria-label="garnet"></button>
+    <button class="swatch" data-variant="pear" data-colour-hex="E2DDA5" aria-label="pear"></button>
+    <button class="swatch" data-variant="frost grey" data-colour-hex="BCC4D5" aria-label="frost grey"></button>
+
+    <!-- colore in una classe CSS, con il valore in un foglio di stile -->
+    <button class="swatch sw--estate-blue" data-variant="estate blue" aria-label="estate blue"></button>
+
+    <!-- colore in stile inline -->
+    <button class="swatch" data-variant="tnf black" style="background-color:#292526" aria-label="tnf black"></button>
+    <button class="swatch" data-variant="white dune" style="background-color:#DCD9D3" aria-label="white dune"></button>
+  </div>
+
+  <p class="nota">
+    Questa scheda riproduce la codifica di un catalogo reale: nomi commerciali,
+    colori espressi in quattro modi diversi, e due varianti il cui colore non
+    compare nel markup.
+  </p>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "ProductGroup",
+  "name": "W QUEST JACKET",
+  "brand": { "@type": "Brand", "name": "The North Face" },
+  "hasVariant": [
+    { "@type": "Product", "color": "burgundy crush" },
+    { "@type": "Product", "color": "new taupe green" },
+    { "@type": "Product", "color": "estate blue" },
+    { "@type": "Product", "color": "frost grey" },
+    { "@type": "Product", "color": "garnet" },
+    { "@type": "Product", "color": "pear" },
+    { "@type": "Product", "color": "tnf black" },
+    { "@type": "Product", "color": "white dune" }
+  ]
+}
+</script>

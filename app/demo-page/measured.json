@@ -1,0 +1,14 @@
+{
+  "_nota": "Colori campionati dalle fotografie prodotto di un catalogo reale, usati come riferimento e come fallback quando le immagini non sono raggiungibili. Il colore è una stima dalla foto, non una misura sul tessuto.",
+  "prodotto": "The North Face W QUEST JACKET — Giacca hard shell",
+  "varianti": [
+    { "nome": "burgundy crush",  "hex": "#9A2645" },
+    { "nome": "new taupe green", "hex": "#6B6454" },
+    { "nome": "estate blue",     "hex": "#143775" },
+    { "nome": "frost grey",      "hex": "#BCC4D5" },
+    { "nome": "garnet",          "hex": "#AB8877" },
+    { "nome": "pear",            "hex": "#E2DDA5" },
+    { "nome": "tnf black",       "hex": "#292526" },
+    { "nome": "white dune",      "hex": "#DCD9D3" }
+  ]
+}
