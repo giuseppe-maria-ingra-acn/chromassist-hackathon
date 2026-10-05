@@ -76,6 +76,7 @@ app/                      applicazione — zero dipendenze
   scripts/confusion.mjs   calcolo da riga di comando
   tests/                  40 test, nessuna dipendenza
 
+tools/                    strumenti eseguibili che riusano il nucleo di calcolo
 agents/                   struttura agentica, usata per costruire il progetto
 presentation/             presentazione del progetto
 docs/research.md          le fonti
@@ -83,6 +84,23 @@ docs/research.md          le fonti
 
 `.claude/` contiene collegamenti simbolici verso `agents/`: sorgente unica,
 leggibile dove serve e caricata dove serve.
+
+## Strumenti
+
+Script senza dipendenze che riusano il nucleo di calcolo. Dettagli in
+`tools/README.md`.
+
+| Strumento | A cosa serve |
+|---|---|
+| `tools/verifica-palette.mjs` | Dice se una palette resta leggibile a chi ha una CVD. Esce con codice 1 in caso di problemi, quindi si usa in pipeline |
+| `tools/valuta-eval.mjs` | Assegna un punteggio all'output di `encoding-scout`, su criteri binari |
+| `app/scripts/confusion.mjs` | Calcola quali colori diventano indistinguibili, dato un profilo |
+
+`verifica-palette` è il caso d'uso **inverso** dell'applicazione: non aiuta chi
+compra a districarsi fra colori mal etichettati, ma chi progetta a non creare il
+problema. Esempio che si incontra davvero — verde «disponibile» contro rosso
+«esaurito»: distano 63 nella realtà e **6.8** per chi ha una deficienza
+rosso-verde.
 
 ## La struttura agentica
 

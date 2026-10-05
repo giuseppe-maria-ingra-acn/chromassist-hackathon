@@ -6,8 +6,17 @@ farlo girare.
 
 ## Metodo
 
-Per ogni caso in `cases/`, esegui `encoding-scout` sul file e confronta l'output
-con la verità attesa. I criteri sono binari: nessun giudizio a sensazione.
+Per ogni caso in `cases/`, esegui `encoding-scout` sul file e passa il suo
+output allo scorer:
+
+```bash
+node tools/valuta-eval.mjs pdp-varianti.html output-agente.txt
+```
+
+L'agente va eseguito a mano — è un sub-agente, non una funzione — ma la
+valutazione no. Se fosse a sensazione, confrontare due modelli non
+significherebbe nulla: i quattro criteri sono binari e la verità attesa sta in
+`cases/attese.json`.
 
 ## Criteri
 

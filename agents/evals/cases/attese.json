@@ -1,0 +1,26 @@
+{
+  "_nota": "Verità attesa per ogni caso. Il criterio 2 è quello che discrimina: un agente che inventa un esadecimale assente produce un'analisi sbagliata con l'apparenza della completezza.",
+  "casi": [
+    {
+      "file": "pdp-varianti.html",
+      "nomeColore": { "fonte": ["titolo", "json-ld", "slug"] },
+      "esadecimale": { "presente": false },
+      "immagine": { "origineDiversa": true },
+      "nomiAttesi": ["deep moss", "clay red", "sand"]
+    },
+    {
+      "file": "listing.html",
+      "nomeColore": { "fonte": ["titolo"] },
+      "esadecimale": { "presente": false },
+      "immagine": { "origineDiversa": true },
+      "nomiAttesi": ["forest night", "aubergine", "magnet/pebble"]
+    },
+    {
+      "file": "con-hex.html",
+      "nomeColore": { "fonte": ["aria-label", "titolo"] },
+      "esadecimale": { "presente": true },
+      "immagine": { "origineDiversa": false },
+      "nomiAttesi": ["ocean", "rust", "bone"]
+    }
+  ]
+}
