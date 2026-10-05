@@ -117,15 +117,22 @@ function mostraEsito() {
   if (!coppie.length) {
     const p = document.createElement('div');
     p.className = 'nessun-avviso';
-    p.textContent = sev === 0
+    // L'icona non è decorativa: avviso e conferma sono entrambi scuri per
+    // garantire il contrasto, e due colori scuri sull'asse rosso-verde
+    // collassano. Il significato lo porta il segno, non la tinta
+    // (WCAG 2.x, criterio 1.4.1 — lo stesso che contestiamo ai cataloghi).
+    p.innerHTML = '<span class="segnale" aria-hidden="true">\u2713</span>';
+    const testo = document.createElement('span');
+    testo.textContent = sev === 0
       ? 'Con il cursore a zero nessuna variante si confonde: è la visione senza difficoltà.'
       : 'Nessuna di queste varianti si confonde con un’altra: puoi scegliere guardando i colori.';
+    p.append(testo);
     avvisi.append(p);
   } else {
     for (const c of coppie) {
       const box = document.createElement('div');
       box.className = 'avviso';
-      box.innerHTML = '<div style="font-weight:600;font-size:14px">Queste due ti appariranno uguali</div>';
+      box.innerHTML = '<div class="titolo"><span class="segnale" aria-hidden="true">\u26a0</span>Queste due ti appariranno uguali</div>';
       for (const v of [c.a, c.b]) {
         const riga = document.createElement('div');
         riga.className = 'capo';

@@ -6,7 +6,7 @@
 <style>
   :root {
     --testo:#15151a; --tenue:#6b6b75; --bordo:#e2e2dd; --fondo:#f6f6f3;
-    --accento:#7500C0; --avviso:#8a3b00; --avviso-bg:#fdf3e7; --ok:#1d5c2e;
+    --accento:#4A3AA8; --avviso:#8a3b00; --avviso-bg:#fdf3e7; --ok:#1d5c2e;
   }
   * { box-sizing:border-box }
   body { margin:0; font:15px/1.55 -apple-system,'Helvetica Neue',Arial,sans-serif;
@@ -52,10 +52,13 @@
 
   .avviso { background:var(--avviso-bg); border-left:3px solid var(--avviso); border-radius:0 8px 8px 0;
             padding:13px 15px; margin-bottom:10px }
+  .avviso .titolo { display:flex; align-items:center; gap:8px; font-weight:600; font-size:14px }
   .avviso .capo { display:flex; align-items:center; gap:9px; margin:5px 0; font-size:14px }
   .avviso .spiega { font-size:13px; color:#6a4a2a; margin-top:8px }
   .numeri { font-size:12px; color:var(--tenue); margin-top:7px; font-variant-numeric:tabular-nums }
-  .nessun-avviso { color:var(--ok); font-size:14px; background:#f1f7f2; border-radius:8px; padding:12px 14px }
+  .nessun-avviso { color:var(--ok); font-size:14px; background:#f1f7f2; border-radius:8px;
+                   padding:12px 14px; display:flex; align-items:center; gap:8px }
+  .segnale { flex:0 0 auto; font-weight:700; font-size:15px }
 
   .elenco { display:flex; flex-wrap:wrap; gap:7px }
   .chip { display:flex; align-items:center; gap:7px; border:1px solid var(--bordo); border-radius:20px;

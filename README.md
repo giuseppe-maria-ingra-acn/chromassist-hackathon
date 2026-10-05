@@ -160,6 +160,40 @@ produrrebbe un'analisi sbagliata con l'apparenza della completezza.
 - **Lettori di pagina** — un attributo non valido viene scartato, non accettato;
   una variante senza colore restituisce `null`, mai un valore dedotto dal nome.
 
+## Abbiamo puntato lo strumento contro noi stessi
+
+I colori semantici della nostra interfaccia — avviso e conferma — sono finiti
+sotto `verifica-palette`, e **non passano**: distano 43 nella realtà e 7,0 per
+chi ha una deficienza rosso-verde. Lo stesso difetto che contestiamo ai cataloghi.
+
+Non è stato risolto cambiando tinta, e la ragione è istruttiva. Perché due
+colori restino distinguibili a chi ha una CVD devono differire in **luminosità**.
+Ma entrambi fanno da colore del testo, quindi devono essere scuri per
+raggiungere il contrasto minimo richiesto (4,5:1). Scuri entrambi significa
+luminosità simile, e si torna al punto di partenza.
+
+I due requisiti sono in conflitto diretto, ed è esattamente il caso per cui
+esiste il criterio WCAG 1.4.1: **il colore non deve essere l'unico veicolo
+dell'informazione**. La soluzione corretta non è una coppia di tinte fortunata,
+è aggiungere un segnale che non dipende dal colore — qui un simbolo, oltre al
+testo e alla posizione.
+
+`verifica-palette` continua a segnalare la coppia, e fa bene: riporta un fatto
+vero. Uno script non può sapere che accanto al colore c'è un simbolo. Abbiamo
+preferito lasciare l'avviso e spiegare la scelta, piuttosto che ritoccare i
+valori fino a far tacere lo strumento.
+
+## Integrazione continua
+
+`.github/workflows/verifica.yml` esegue a ogni push:
+
+- i 47 test (nessuna installazione: il progetto è senza dipendenze)
+- il controllo che **nessuna dipendenza** sia stata introdotta — lo stesso
+  vincolo dell'hook, esteso a chi non usa Claude Code. Un vincolo valido solo
+  per una parte dei contributori non è un vincolo
+- l'avvio effettivo degli strumenti, per impedire che diventino decorativi
+- la verifica che gli hook si comportino come dichiarato
+
 ## Limiti
 
 - Il colore è **stimato da una fotografia**, non misurato sul tessuto: dipende da

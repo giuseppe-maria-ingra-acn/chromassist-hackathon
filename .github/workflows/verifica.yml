@@ -1,0 +1,64 @@
+name: verifica
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Test e vincoli di progetto
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Nessun passo di installazione: il progetto è a zero dipendenze
+      # ed è proprio questo che lo rende utilizzabile senza configurare nulla.
+
+      - name: Test
+        working-directory: app
+        run: node --test tests/
+
+      - name: Nessuna dipendenza introdotta
+        # Lo stesso vincolo imposto dall'hook per chi lavora con Claude Code,
+        # qui esteso a chiunque apra una pull request. Un vincolo che vale solo
+        # per una parte dei contributori non è un vincolo.
+        run: |
+          if grep -qE '"(dependencies|devDependencies|peerDependencies)"[[:space:]]*:[[:space:]]*\{[[:space:]]*"' app/package.json; then
+            echo "::error::package.json dichiara delle dipendenze."
+            echo "ChromAssist deve aprirsi e funzionare senza installazioni."
+            exit 1
+          fi
+          if [ -f app/package-lock.json ]; then
+            echo "::error::package-lock.json non dovrebbe esistere in un progetto senza dipendenze."
+            exit 1
+          fi
+          echo "Nessuna dipendenza. "
+
+      - name: Gli strumenti si avviano
+        # Non si verifica l'esito dell'analisi — una palette con problemi fa
+        # uscire con 1 ed è un risultato legittimo — ma che gli strumenti
+        # funzionino davvero, invece di essere decorativi.
+        run: |
+          node app/scripts/confusion.mjs deuteranomalia 0.9 > /dev/null
+          node tools/verifica-palette.mjs "#2E7D32" "#C62828" || true
+          printf 'SITO: x\nNOME COLORE\n fonte: titolo\nESADECIMALE\n presente: NO\nIMMAGINE\n origine: diversa\n' \
+            | node tools/valuta-eval.mjs pdp-varianti.html - || true
+          echo "Strumenti eseguibili. "
+
+      - name: Gli hook sono eseguibili e si comportano come dichiarato
+        run: |
+          chmod +x agents/hooks/*.sh
+          set +e
+          echo '{"tool_input":{"file_path":"app/package.json","content":"{\"dependencies\":{\"x\":\"1\"}}"}}' \
+            | ./agents/hooks/blocca-dipendenze.sh > /dev/null 2>&1
+          esito=$?
+          set -e
+          if [ "$esito" -ne 2 ]; then
+            echo "::error::l'hook dovrebbe bloccare con codice 2, ha restituito $esito"
+            exit 1
+          fi
+          echo "Hook verificati. "
