@@ -11,206 +11,232 @@
     --ink: #0A0014;
     --rose: #FF50A0;
     --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --t1: rgba(255,255,255,0.88);
+    --t2: rgba(255,255,255,0.65);
+    --t3: rgba(255,255,255,0.45);
+    --hair: rgba(255,255,255,0.10);
   }
   * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body {
-    margin: 0;
-    background: #050008;
-    color: #fff;
+    margin: 0; overflow: hidden;
+    background: #050008; color: #fff;
     font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.6;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1000px; margin: 0 auto; padding: 44px 26px 80px; }
 
-  /* intestazione */
-  .brand { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 44px; }
-  .brand .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
-  .brand .logo .mark { color: var(--purple); }
-  .brand .org { text-align: right; font-size: 10px; line-height: 1.4; }
-  .brand .org .a { color: var(--purple-light); text-transform: uppercase; letter-spacing: 0.25em; font-weight: 600; }
-  .brand .org .b { color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.2em; }
-
-  /* copertina */
-  .hero { text-align: center; margin-bottom: 60px; }
-  .hero .eyebrow {
-    display: inline-block; border: 1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.05); border-radius: 999px;
-    padding: 6px 16px; font-size: 11px; text-transform: uppercase;
-    letter-spacing: 0.25em; color: rgba(255,255,255,0.7);
+  /* ---------- impalcatura del deck ---------- */
+  /* Le slide scorrono orizzontalmente. La dissolvenza da sola non bastava:
+     premendo un tasto sembrava che non cambiasse nulla. Il movimento
+     laterale rende visibile il passaggio, e la direzione dice se si sta
+     andando avanti o indietro. */
+  .slide {
+    position: fixed; inset: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 54px clamp(28px, 6vw, 92px) 72px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(60px);
+    transition: transform .34s cubic-bezier(.22,.61,.36,1), opacity .26s ease, visibility .34s;
   }
-  .hero h1 { font-size: 52px; font-weight: 700; letter-spacing: -0.03em; margin: 22px 0 14px; line-height: 1.05; }
-  .hero h1 .grad {
-    background: linear-gradient(90deg, var(--purple-light), var(--purple));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .hero p { max-width: 660px; margin: 0 auto; font-size: 19px; color: rgba(255,255,255,0.65); }
+  .slide.attiva { opacity: 1; visibility: visible; transform: translateX(0); }
+  .slide.uscita-sinistra { transform: translateX(-60px); }
+  .corpo { flex: 1; display: flex; flex-direction: column; justify-content: center;
+           max-width: 1060px; width: 100%; margin: 0 auto; min-height: 0; overflow-y: auto; }
+  .corpo::-webkit-scrollbar { width: 0; }
 
-  /* sezioni */
-  .sez {
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 18px;
-    background: rgba(255,255,255,0.02);
-    padding: 34px;
-    margin-bottom: 36px;
-  }
-  .sez-head { border-bottom: 1px solid rgba(161,0,255,0.25); padding-bottom: 16px; margin-bottom: 22px; }
-  .sez-num { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.25em; color: var(--purple-light); }
-  .sez-head h2 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; margin: 6px 0 0; }
-  .guida { font-size: 17px; color: rgba(255,255,255,0.85); margin: 0 0 14px; }
-  .guida:last-child { margin-bottom: 0; }
-  .sottotono { font-style: italic; color: rgba(255,255,255,0.5); font-size: 14px; }
+  /* barra di avanzamento e contatore */
+  .avanzamento { position: fixed; top: 0; left: 0; height: 2px; background: var(--purple);
+                 transition: width .22s ease; z-index: 10; }
+  .contatore { position: fixed; bottom: 22px; right: clamp(20px, 5vw, 56px);
+               font-size: 11px; letter-spacing: 0.2em; color: var(--t3); z-index: 10;
+               font-variant-numeric: tabular-nums; }
+  .direzione { position: fixed; top: 50%; right: clamp(20px, 5vw, 56px);
+               transform: translateY(-50%); font-size: 40px; color: var(--purple);
+               opacity: 0; transition: opacity .3s ease; pointer-events: none; z-index: 10; }
+  .aiuto { position: fixed; bottom: 22px; left: clamp(20px, 5vw, 56px);
+           font-size: 11px; letter-spacing: 0.14em; color: rgba(255,255,255,0.22);
+           text-transform: uppercase; z-index: 10; }
 
-  h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--purple-light); margin: 0 0 8px; }
-  h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(255,255,255,0.4); margin: 26px 0 12px; }
+  /* intestazione, su ogni slide tranne la copertina */
+  .marchio { position: fixed; top: 26px; left: clamp(20px, 5vw, 56px);
+             font-size: 14px; font-weight: 700; letter-spacing: -0.02em; color: var(--t3); z-index: 10; }
+  .marchio .mark { color: var(--purple); }
+  .org { position: fixed; top: 24px; right: clamp(20px, 5vw, 56px); text-align: right;
+         font-size: 9px; line-height: 1.5; z-index: 10; }
+  .org .a { color: var(--purple-light); text-transform: uppercase; letter-spacing: 0.25em; font-weight: 600; }
+  .org .b { color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.2em; }
 
-  .rilievo {
-    border: 1px solid rgba(161,0,255,0.25);
-    background: rgba(161,0,255,0.06);
-    border-radius: 12px; padding: 18px 20px; margin: 22px 0;
-  }
-  .rilievo p { margin: 0; color: rgba(255,255,255,0.85); }
+  /* ---------- tipografia ---------- */
+  .occhio { font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.25em; color: var(--purple-light); margin-bottom: 14px; }
+  h1 { font-size: clamp(40px, 6.4vw, 78px); font-weight: 700; letter-spacing: -0.035em;
+       line-height: 1.02; margin: 0 0 20px; }
+  h1 .grad { background: linear-gradient(90deg, var(--purple-light), var(--purple));
+             -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h2 { font-size: clamp(28px, 3.9vw, 46px); font-weight: 700; letter-spacing: -0.025em;
+       line-height: 1.1; margin: 0 0 26px; max-width: 22ch; }
+  h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em;
+       color: var(--purple-light); margin: 0 0 9px; }
+  h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em;
+       color: var(--t3); margin: 26px 0 13px; }
+  p { font-size: clamp(16px, 1.45vw, 20px); color: var(--t1); margin: 0 0 14px; max-width: 64ch; }
+  p:last-child { margin-bottom: 0; }
+  .tenue { color: var(--t2); }
+  .nota { font-size: clamp(14px, 1.15vw, 16px); color: var(--t3); font-style: italic; }
+  .nota strong { color: var(--t1); font-style: normal; font-weight: 600; }
+  strong { font-weight: 600; }
+  .nomi { font-family: var(--mono); font-size: 0.88em; color: var(--purple-light); }
 
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  .tris { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .eyebrow { display: inline-block; border: 1px solid var(--hair);
+             background: rgba(255,255,255,0.05); border-radius: 999px;
+             padding: 7px 18px; font-size: 11px; text-transform: uppercase;
+             letter-spacing: 0.25em; color: var(--t2); margin-bottom: 26px; }
+
+  /* ---------- blocchi ---------- */
+  .rilievo { border: 1px solid rgba(161,0,255,0.25); background: rgba(161,0,255,0.06);
+             border-radius: 12px; padding: 20px 22px; margin: 22px 0; }
+  .rilievo p { margin: 0; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: start; }
+  .tris { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .carta { border: 1px solid var(--hair); background: rgba(255,255,255,0.03);
+           border-radius: 12px; padding: 19px; }
+  .c-num { font-size: 12px; font-weight: 700; color: var(--purple-light);
+           text-transform: uppercase; letter-spacing: 0.18em; }
+  .carta h5 { font-size: 16px; font-weight: 600; margin: 8px 0 7px; }
+  .carta p { font-size: 14px; color: var(--t2); margin: 0; max-width: none; }
 
   .bullets { list-style: none; padding: 0; margin: 0; }
-  .bullets li { position: relative; padding-left: 20px; color: rgba(255,255,255,0.72); margin-bottom: 9px; }
+  .bullets li { position: relative; padding-left: 24px; color: var(--t1);
+                margin-bottom: 14px; font-size: clamp(16px, 1.4vw, 19px); max-width: 62ch; }
   .bullets li::before { content: "›"; position: absolute; left: 0; color: var(--purple); font-weight: 700; }
-  .bullets strong { color: #fff; font-weight: 600; }
+  .bullets li:last-child { margin-bottom: 0; }
 
-  .carta { border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); border-radius: 12px; padding: 17px; }
-  .c-num { font-size: 13px; font-weight: 700; color: var(--purple-light); }
-  .carta h5 { font-size: 14px; font-weight: 600; margin: 6px 0; }
-  .carta p { font-size: 13px; color: rgba(255,255,255,0.55); margin: 0; }
+  .cifra { font-size: clamp(64px, 9vw, 112px); font-weight: 700; letter-spacing: -0.045em;
+           line-height: 1; color: var(--purple-light); }
+  .cifra small { display: block; font-size: clamp(14px, 1.2vw, 17px); font-weight: 400;
+                 letter-spacing: 0; color: var(--t2); margin-top: 16px; max-width: 32ch; }
 
-  .cifra { font-size: 78px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--purple-light); }
-  .cifra small { display: block; font-size: 15px; font-weight: 400; letter-spacing: 0; color: rgba(255,255,255,0.5); margin-top: 12px; max-width: 34ch; }
+  .cmd { font-family: var(--mono); font-size: clamp(12px, 1.05vw, 15px); line-height: 1.75;
+         border: 1px solid var(--hair); background: rgba(255,255,255,0.035);
+         border-radius: 10px; padding: 16px 18px; margin: 0 0 14px;
+         color: var(--t1); overflow-x: auto; white-space: pre; }
 
   /* prova visiva */
-  .prova { display: flex; align-items: flex-end; gap: 26px; flex-wrap: wrap; margin: 26px 0 14px; }
+  .prova { display: flex; align-items: flex-end; gap: clamp(18px, 3vw, 40px);
+           flex-wrap: wrap; margin: 10px 0 20px; }
   .capo { text-align: center; }
-  .pallino { width: 76px; height: 76px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.18); margin: 0 auto 10px; }
-  .capo b { display: block; font-size: 13px; font-weight: 600; }
-  .capo em { display: block; font-style: normal; font-size: 12px; color: rgba(255,255,255,0.45); }
-  .freccia { font-size: 26px; color: rgba(255,255,255,0.3); padding-bottom: 28px; }
-  .misura { font-size: 13px; color: rgba(255,255,255,0.5); }
+  .pallino { width: clamp(72px, 9vw, 116px); height: clamp(72px, 9vw, 116px);
+             border-radius: 50%; border: 1px solid rgba(255,255,255,0.18); margin: 0 auto 12px; }
+  .capo b { display: block; font-size: 14px; font-weight: 600; }
+  .capo em { display: block; font-style: normal; font-size: 13px; color: var(--t3); }
+  .freccia { font-size: 30px; color: rgba(255,255,255,0.28); padding-bottom: 34px; }
+  .misura { font-size: clamp(14px, 1.2vw, 17px); color: var(--t2); }
   .misura strong { color: var(--purple-light); }
 
-  .limiti { border: 1px solid rgba(255,80,160,0.2); background: rgba(255,80,160,0.05); }
-  .limiti .sez-head { border-bottom-color: rgba(255,80,160,0.25); }
-  .limiti .sez-num { color: var(--rose); }
-  .limiti .bullets li::before { content: "×"; color: var(--rose); }
+  /* slide dei limiti */
+  .slide.limiti { background: linear-gradient(180deg, #050008 0%, #10000A 100%); }
+  .slide.limiti .occhio { color: var(--rose); }
+  .slide.limiti .bullets li::before { content: "×"; color: var(--rose); }
 
-  .nomi { font-family: var(--mono); font-size: 13px; color: var(--purple-light); }
-  .cmd {
-    font-family: var(--mono); font-size: 13px; line-height: 1.7;
-    border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035);
-    border-radius: 10px; padding: 14px 16px; margin: 0 0 12px;
-    color: rgba(255,255,255,0.88); overflow-x: auto;
-  }
-
-  footer { text-align: center; margin-top: 44px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(255,255,255,0.25); }
-  footer .mark { color: var(--purple); }
-
-  @media (max-width: 680px) {
-    .cols, .tris { grid-template-columns: 1fr; }
-    .hero h1 { font-size: 34px; }
-    .cifra { font-size: 54px; }
+  @media (max-width: 760px) {
+    .cols, .tris { grid-template-columns: 1fr; gap: 18px; }
   }
 </style>
 
-<div class="wrap">
+<div class="avanzamento" id="avanzamento"></div>
+<div class="marchio" id="marchio">Chrom<span class="mark">Assist</span></div>
+<div class="org" id="org"><div class="a">Accenture</div><div class="b">Application Engineering</div></div>
+<div class="contatore" id="contatore"></div>
+<div class="aiuto">← → oppure clic · spazio avanza</div>
+<div class="direzione" id="direzione"></div>
 
-  <div class="brand">
-    <div class="logo">Chrom<span class="mark">Assist</span></div>
-    <div class="org">
-      <div class="a">Accenture</div>
-      <div class="b">Application Engineering</div>
-    </div>
-  </div>
-
-  <div class="hero">
+<!-- 1 — copertina -->
+<section class="slide copertina">
+  <div class="corpo" style="align-items:center;text-align:center">
     <span class="eyebrow">Accessibilità Digitale</span>
     <h1>I colori che <span class="grad">non puoi vedere</span></h1>
-    <p>
+    <p class="tenue" style="font-size:clamp(17px,1.7vw,23px);max-width:40ch;margin:0 auto">
       Un uomo su dodici non distingue certi colori. Gli e-commerce glieli
       vendono con un pallino colorato e un nome inventato.
     </p>
   </div>
+</section>
 
-  <!-- 1 -->
-  <section class="sez">
-    <div class="sez-head">
-      <div class="sez-num">Il problema</div>
-      <h2>Il colore non è scritto da nessuna parte</h2>
-    </div>
-
+<!-- 2 — il problema, la scala -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">Il problema</div>
+    <h2>Il colore non è scritto da nessuna parte</h2>
     <div class="cols">
-      <div>
-        <div class="cifra">1 su 12
-          <small>uomini con una deficienza della visione dei colori. Una donna su 200. Circa 350 milioni di persone.</small>
-        </div>
+      <div class="cifra">1 su 12
+        <small>uomini con una deficienza della visione dei colori. Una donna su 200. Circa 350 milioni di persone.</small>
       </div>
       <div>
-        <p class="guida">
-          Su una scheda prodotto il colore si sceglie da pallini senza etichetta.
-          Chi non li distingue ha come unica fonte il nome.
+        <p>
+          Su una scheda prodotto il colore si sceglie da pallini senza
+          etichetta. Chi non li distingue ha come unica fonte il nome.
         </p>
         <h4>e i nomi sono questi</h4>
-        <p class="nomi">forest night · magnet/pebble · streamsong · aubergine</p>
+        <p class="nomi" style="font-size:clamp(14px,1.3vw,18px)">forest night<br>magnet/pebble<br>streamsong<br>aubergine</p>
       </div>
     </div>
+  </div>
+</section>
 
+<!-- 3 — il problema, la misura -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">Il problema</div>
+    <h2>E a volte il nome è sbagliato</h2>
     <div class="rilievo">
       <p>
-        Abbiamo analizzato <strong>96 capi</strong> di un catalogo reale:
-        54 nomi colore diversi, nessun valore leggibile da una macchina, e un
-        prodotto chiamato <strong>black</strong> che nella foto è marrone.
+        Su <strong>96 capi</strong> di un catalogo reale: 54 nomi colore
+        diversi, <strong>nessun valore leggibile da una macchina</strong>, e un
+        prodotto chiamato <span class="nomi">black</span> che nella foto è marrone.
       </p>
     </div>
-    <p class="sottotono">
+    <p class="tenue">
       Chi vede normalmente apre la foto e se ne accorge. Chi non distingue i
       colori no: per lui il testo è l'unica fonte, e il testo è sbagliato.
     </p>
-  </section>
+  </div>
+</section>
 
-  <!-- 2 -->
-  <section class="sez">
-    <div class="sez-head">
-      <div class="sez-num">L'utente</div>
-      <h2>Marco, 34 anni, vuole comprare una giacca</h2>
-    </div>
-
-    <p class="guida">
+<!-- 4 — l'utente -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">L'utente</div>
+    <h2>Marco, 34 anni, vuole comprare una giacca</h2>
+    <p>
       Sa di «vedere male i colori» perché glielo dissero alla visita per la
       patente. Non sa cosa significhi <em>deuteranomalia</em> e non gliene importa.
     </p>
-    <p class="guida">
+    <p class="tenue">
       Apre la scheda. Otto pallini, due identici fra loro. Legge i nomi:
       <span class="nomi">burgundy crush</span> e <span class="nomi">new taupe green</span>.
       Non lo aiutano.
     </p>
-
     <h4>cosa fa oggi</h4>
     <div class="tris">
       <div class="carta"><div class="c-num">01</div><h5>Tira a indovinare</h5><p>E poi fa un reso.</p></div>
       <div class="carta"><div class="c-num">02</div><h5>Chiede a qualcuno</h5><p>Ogni volta che compra.</p></div>
       <div class="carta"><div class="c-num">03</div><h5>Rinuncia</h5><p>E va in negozio.</p></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- 3 -->
-  <section class="sez">
-    <div class="sez-head">
-      <div class="sez-num">La soluzione</div>
-      <h2>Due traduzioni, in sequenza</h2>
-    </div>
-
+<!-- 5 — la soluzione -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">La soluzione</div>
+    <h2>Due traduzioni, in sequenza</h2>
     <div class="cols">
       <div>
         <h3>Dal nome al colore vero</h3>
-        <p class="guida" style="font-size:16px">
+        <p style="font-size:clamp(15px,1.3vw,18px)">
           <span class="nomi">new taupe green</span> diventa
           <strong>verde tortora</strong>. Il colore si ricava dalla fotografia,
           perché nella pagina non c'è. Utile a chiunque, non solo a Marco.
@@ -218,13 +244,20 @@
       </div>
       <div>
         <h3>Dal colore vero a quello percepito</h3>
-        <p class="guida" style="font-size:16px">
+        <p style="font-size:clamp(15px,1.3vw,18px)">
           Quel verde tortora, per Marco, è <strong>indistinguibile</strong> dal
           rosso vinaccia della variante accanto. E glielo diciamo.
         </p>
       </div>
     </div>
+  </div>
+</section>
 
+<!-- 6 — la prova -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">La prova</div>
+    <h2>Lontanissimi, poi lo stesso colore</h2>
     <div class="prova">
       <div class="capo">
         <div class="pallino" style="background:#9A2645"></div>
@@ -242,237 +275,284 @@
     </div>
     <p class="misura">
       Distanza fra i due colori: <strong>29,5</strong> nella realtà,
-      <strong>7,5</strong> come li vede lui. Il nome scelto dal venditore resta
-      sempre scritto: aggiungiamo informazione, non la riscriviamo.
+      <strong>7,5</strong> come li vede lui.
     </p>
-  </section>
-
-  <!-- 4 -->
-  <section class="sez">
-    <div class="sez-head">
-      <div class="sez-num">Il nucleo tecnico</div>
-      <h2>Matematica, non un modello linguistico</h2>
-    </div>
-
-    <p class="guida">
-      La simulazione di una deficienza della visione è una trasformazione
-      matematica esatta. Chiederla a un LLM significherebbe pagare una stima
-      non riproducibile, più lenta e meno accurata.
+    <p class="nota" style="margin-top:12px">
+      Il nome scelto dal venditore resta sempre scritto: aggiungiamo
+      informazione, non la riscriviamo. È una proprietà verificata da un test.
     </p>
+  </div>
+</section>
 
-    <div class="cols">
+<!-- 7 — il nucleo tecnico -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">Il nucleo tecnico</div>
+    <h2>Matematica, non un modello linguistico</h2>
+    <p class="tenue">
+      Simulare una deficienza della visione è una trasformazione esatta.
+      Chiederla a un modello significherebbe pagare una stima non riproducibile,
+      più lenta e meno accurata.
+    </p>
+    <div class="cols" style="margin-top:8px">
       <div>
         <h3>Come appare un colore</h3>
-        <p class="sottotono" style="font-style:normal;color:rgba(255,255,255,0.72)">
-          Matrici di <strong style="color:#fff">Machado, Oliveira &amp; Fernandes
-          (2009)</strong>, IEEE TVCG — peer-reviewed, oltre 300 citazioni.
-          Applicate in <strong style="color:#fff">RGB lineare</strong>: farlo in
-          sRGB produce valori plausibili e sbagliati, l'errore che non si nota.
+        <p style="font-size:clamp(14px,1.2vw,17px)" class="tenue">
+          Matrici di <strong>Machado, Oliveira &amp; Fernandes (2009)</strong>,
+          IEEE TVCG — peer-reviewed, oltre 300 citazioni. Applicate in
+          <strong>RGB lineare</strong>: in sRGB darebbero valori plausibili e
+          sbagliati, l'errore che non si nota.
         </p>
       </div>
       <div>
         <h3>Quali colori si confondono</h3>
-        <p class="sottotono" style="font-style:normal;color:rgba(255,255,255,0.72)">
-          <strong style="color:#fff">ΔE2000</strong> fra i colori
-          <em>simulati</em>, non fra gli originali. Non la distanza euclidea in
-          Lab: sovrastima i blu e sottostima i verdi, e la soglia diventerebbe
-          inaffidabile.
+        <p style="font-size:clamp(14px,1.2vw,17px)" class="tenue">
+          <strong>ΔE2000</strong> fra i colori <em>simulati</em>, non fra gli
+          originali. Non la distanza euclidea in Lab: sovrastima i blu e
+          sottostima i verdi, e la soglia diventerebbe inaffidabile.
         </p>
       </div>
     </div>
+  </div>
+</section>
 
-    <h4>il criterio ha due condizioni, e la seconda è quella che conta</h4>
+<!-- 8 — il criterio -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">Il criterio</div>
+    <h2>Due condizioni, e la seconda è quella che conta</h2>
     <div class="rilievo">
       <p>
         <strong>vicinanza</strong> — i colori percepiti distano meno della soglia<br>
         <strong>crollo</strong> — la distanza percepita è una frazione di quella reale
       </p>
     </div>
-    <p class="sottotono">
-      Senza la seconda condizione segnaleremmo anche due bianchi sporchi, simili
-      per chiunque. Ci interessano solo le coppie che la deficienza
-      <em>avvicina</em>: colori che il venditore presenta come alternative
-      distinte e che per questa persona diventano la stessa cosa. È la
-      differenza fra un avviso azionabile e rumore.
+    <p class="tenue">
+      Senza la seconda segnaleremmo anche due bianchi sporchi, simili per
+      chiunque. Ci interessano solo le coppie che la deficienza
+      <strong>avvicina</strong>: colori che il venditore presenta come
+      alternative distinte e che per questa persona diventano la stessa cosa.
     </p>
+    <p class="nota">
+      È la differenza fra un avviso su cui si può agire e del rumore.
+    </p>
+  </div>
+</section>
 
-    <h4>verificato contro riferimenti esterni</h4>
+<!-- 9 — la verifica -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">La verifica</div>
+    <h2>Riferimenti esterni, non autoreferenziali</h2>
     <pre class="cmd">ΔE2000(bianco, nero) = 100.00     ← valore canonico CIEDE2000
 blu puro, asse rosso-verde        ← il meno alterato: il cono del blu è intatto
-grigi su ogni profilo             ← restano acromatici</pre>
-    <p class="sottotono">
-      47 test, offline, senza dipendenze. La soglia non è un numero scelto a
-      occhio: è calibrata contro coppie con verità misurata su fotografie reali,
-      e quel test è la specifica.
+grigi, su ogni profilo            ← restano acromatici</pre>
+    <p class="tenue">
+      <strong>47 test</strong>, offline, senza dipendenze, in meno di un secondo.
     </p>
-  </section>
+    <p class="nota">
+      La soglia non è un numero scelto a occhio: è calibrata contro coppie con
+      verità misurata su fotografie reali, e quel test è la specifica — non un
+      controllo fatto dopo.
+    </p>
+  </div>
+</section>
 
-  <!-- 5 -->
-  <section class="sez">
-    <div class="sez-head">
-      <div class="sez-num">Dove interviene l'AI</div>
-      <h2>Nel costruirlo, non nell'usarlo</h2>
-    </div>
-
+<!-- 10 — dove interviene l'AI -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">Dove interviene l'AI</div>
+    <h2>Nel costruirlo, non nell'usarlo</h2>
     <div class="rilievo">
       <p>
         L'applicazione finita <strong>non chiama nessun servizio</strong>:
         nessuna chiave, nessun costo, nessuna connessione. Si apre e funziona.
       </p>
     </div>
-
-    <p class="guida">
+    <p class="tenue">
       Per uno strumento di accessibilità è una qualità, non un limite: una
       persona daltonica non deve procurarsi delle credenziali per sapere di che
-      colore è una giacca. E la risposta è istantanea, perché è un calcolo.
+      colore è una giacca.
     </p>
-
     <h4>gli agenti hanno lavorato qui</h4>
     <div class="tris">
-      <div class="carta">
-        <div class="c-num">01</div><h5>Ha indagato</h5>
-        <p>Un agente ha ispezionato i cataloghi veri e riportato dove si nasconde il colore. Da lì sono nati i lettori di pagina.</p>
-      </div>
-      <div class="carta">
-        <div class="c-num">02</div><h5>Ha verificato</h5>
-        <p>Un secondo ha controllato la matematica contro valori di riferimento pubblicati.</p>
-      </div>
-      <div class="carta">
-        <div class="c-num">03</div><h5>Ha riletto</h5>
-        <p>Un terzo ha riletto ogni frase dal punto di vista di chi non vede i colori di cui si parla.</p>
-      </div>
+      <div class="carta"><div class="c-num">01</div><h5>Ha indagato</h5>
+        <p>Ha ispezionato i cataloghi veri e riportato dove si nasconde il colore. Da lì i lettori di pagina.</p></div>
+      <div class="carta"><div class="c-num">02</div><h5>Ha verificato</h5>
+        <p>Ha controllato la matematica contro valori di riferimento pubblicati.</p></div>
+      <div class="carta"><div class="c-num">03</div><h5>Ha riletto</h5>
+        <p>Ha riletto ogni frase dal punto di vista di chi non vede quei colori.</p></div>
     </div>
-    <p class="sottotono" style="margin-top:20px">
-      Gli strumenti sono stati scritti <strong style="color:#fff;font-style:normal">prima</strong>
-      del codice, e usati per scriverlo: la skill sulla simulazione precede il
-      modulo che la implementa. La cronologia dei commit lo mostra.
-    </p>
+  </div>
+</section>
 
-    <h4>i vincoli non dipendono dalla memoria di nessuno</h4>
+<!-- 11 — i vincoli meccanici -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">La struttura agentica</div>
+    <h2>I vincoli non dipendono dalla memoria di nessuno</h2>
     <div class="tris">
-      <div class="carta">
-        <div class="c-num">hook</div><h5>Zero dipendenze</h5>
-        <p>Una modifica che aggiunga un pacchetto viene rifiutata mentre la scrivi, con il motivo.</p>
-      </div>
-      <div class="carta">
-        <div class="c-num">hook</div><h5>Test sul nucleo</h5>
-        <p>Dopo ogni modifica a <span class="nomi">colorlab</span> i 47 test girano da soli.</p>
-      </div>
-      <div class="carta">
-        <div class="c-num">CI</div><h5>Per chiunque</h5>
-        <p>Lo stesso divieto a ogni pull request: un vincolo valido per una parte sola non è un vincolo.</p>
-      </div>
+      <div class="carta"><div class="c-num">hook</div><h5>Zero dipendenze</h5>
+        <p>Una modifica che aggiunga un pacchetto viene rifiutata mentre la scrivi, con il motivo.</p></div>
+      <div class="carta"><div class="c-num">hook</div><h5>Test sul nucleo</h5>
+        <p>Dopo ogni modifica a <span class="nomi">colorlab</span> i 47 test girano da soli.</p></div>
+      <div class="carta"><div class="c-num">CI</div><h5>Per chiunque</h5>
+        <p>Lo stesso divieto a ogni pull request: un vincolo valido per una parte sola non è un vincolo.</p></div>
     </div>
-
-    <h4>e l'eval decide una cosa concreta</h4>
-    <p class="sottotono" style="font-style:normal;color:rgba(255,255,255,0.72)">
-      Su quale livello di modello far girare l'agente che ispeziona le pagine.
-      Quattro criteri binari su tre casi con verità nota — perché una
-      valutazione a sensazione non permette di confrontare due modelli. Il
-      criterio che discrimina è <strong style="color:#fff">dichiarare l'assenza</strong>
-      di un esadecimale invece di inventarne uno plausibile: è il fallimento più
-      probabile di un modello più debole, ed è anche il peggiore, perché produce
-      un'analisi sbagliata con l'apparenza della completezza.
+    <p class="nota" style="margin-top:24px">
+      Gli strumenti sono stati scritti <strong>prima</strong> del codice e usati
+      per scriverlo: la skill sulla simulazione precede il modulo che la
+      implementa, e la cronologia dei commit lo mostra.
     </p>
-  </section>
+  </div>
+</section>
 
-  <!-- 6 -->
-  <section class="sez">
-    <div class="sez-head">
-      <div class="sez-num">Il miglioramento</div>
-      <h2>Cosa cambia per Marco</h2>
+<!-- 12 — l'eval -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">L'eval</div>
+    <h2>Decide una cosa concreta</h2>
+    <p class="tenue">
+      Su quale livello di modello far girare l'agente che ispeziona le pagine.
+      Quattro criteri binari su tre casi con verità nota — perché una valutazione
+      a sensazione non permette di confrontare due modelli.
+    </p>
+    <div class="rilievo">
+      <p>
+        Il criterio che discrimina: <strong>dichiarare l'assenza</strong> di un
+        esadecimale, invece di inventarne uno plausibile.
+      </p>
     </div>
+    <p class="nota">
+      È il fallimento più probabile di un modello più debole, ed è anche il
+      peggiore: produce un'analisi sbagliata con l'apparenza della completezza.
+    </p>
+  </div>
+</section>
 
+<!-- 13 — il miglioramento -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">Il miglioramento</div>
+    <h2>Cosa cambia per Marco</h2>
     <ul class="bullets">
       <li>Non ordina il colore sbagliato, e non fa il reso.</li>
       <li>Non deve chiedere a nessuno di guardare il suo schermo.</li>
       <li>Non rinuncia a comprare online.</li>
       <li>Sa <strong>come si chiama davvero</strong> il colore che sta comprando.</li>
     </ul>
-
     <div class="rilievo">
       <p>
         E con un cursore può far vedere agli altri come li vede lui.
         <strong>Per la prima volta può mostrarlo, invece di spiegarlo.</strong>
       </p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- 7 -->
-  <section class="sez">
-    <div class="sez-head">
-      <div class="sez-num">Come si prova</div>
-      <h2>Due minuti, nessuna installazione</h2>
-    </div>
-
+<!-- 14 — come si prova -->
+<section class="slide">
+  <div class="corpo">
+    <div class="occhio">Come si prova</div>
+    <h2>Due minuti, nessuna installazione</h2>
     <div class="cols">
       <div>
         <h3>L'applicazione</h3>
         <pre class="cmd">cd app
 python3 -m http.server 4173</pre>
-        <p class="sottotono">
-          Poi <span class="nomi">localhost:4173</span>. Nessun `npm install`,
-          nessuna chiave: il progetto non ha dipendenze.
-        </p>
       </div>
       <div>
         <h3>I test</h3>
         <pre class="cmd">cd app
 node --test tests/</pre>
-        <p class="sottotono">
-          47 test, offline, meno di un secondo. Fra cui il valore canonico
-          ΔE2000 bianco/nero = 100, come riferimento esterno.
-        </p>
       </div>
     </div>
-
     <h4>e gli strumenti girano davvero</h4>
     <pre class="cmd">node tools/verifica-palette.mjs "#2E7D32" "#C62828"
-  → distanza 63 reale → 6.8 percepita · 1 coppia resa indistinguibile</pre>
-    <p class="sottotono">
-      Verde «disponibile» contro rosso «esaurito»: la codifica più diffusa
-      negli e-commerce, e due stati opposti che diventano lo stesso colore.
-      Lo stesso motore, puntato dall'altro lato — su chi progetta, non su chi compra.
+  → 63 reale → 6.8 percepita · 1 coppia resa indistinguibile</pre>
+    <p class="nota">
+      Verde «disponibile» contro rosso «esaurito»: la codifica più diffusa negli
+      e-commerce, e due stati opposti che diventano lo stesso colore. Lo stesso
+      motore puntato su chi progetta, non su chi compra.
     </p>
-  </section>
+  </div>
+</section>
 
-  <!-- 8 -->
-  <section class="sez limiti">
-    <div class="sez-head">
-      <div class="sez-num">Limiti e rischi</div>
-      <h2>Cosa questo strumento non fa</h2>
-    </div>
-
+<!-- 15 — limiti -->
+<section class="slide limiti">
+  <div class="corpo">
+    <div class="occhio">Limiti e rischi</div>
+    <h2>Cosa questo strumento non fa</h2>
     <ul class="bullets">
-      <li>
-        <strong>Il colore è stimato da una fotografia</strong>, non misurato sul
-        tessuto: dipende da luce, post-produzione e compressione. Serve a capire
-        se due opzioni si confondono, non a certificare una tinta.
-      </li>
-      <li>
-        <strong>Un capo multicolore rompe l'ipotesi</strong> del colore dominante.
-        Quando accade lo dichiariamo, invece di inventare un valore.
-      </li>
-      <li>
-        <strong>Le soglie sono una media statistica</strong>, non la vista di una
-        persona precisa. Per questo il cursore resta in mano all'utente.
-      </li>
-      <li>
-        <strong>Non decide al posto suo.</strong> Mostra, spiega, e si ferma:
-        la scelta resta di chi compra.
-      </li>
+      <li><strong>Il colore è stimato da una fotografia</strong>, non misurato sul
+          tessuto: dipende da luce, post-produzione e compressione.</li>
+      <li><strong>Un capo multicolore rompe l'ipotesi</strong> del colore dominante.
+          Quando accade lo dichiariamo, invece di inventare un valore.</li>
+      <li><strong>Le soglie sono una media statistica</strong>, non la vista di una
+          persona precisa. Per questo il cursore resta in mano all'utente.</li>
+      <li><strong>Non decide al posto suo.</strong> Mostra, spiega, e si ferma.</li>
     </ul>
-
-    <p class="sottotono" style="margin-top:22px">
+    <p class="nota" style="margin-top:24px">
       Abbiamo puntato lo strumento anche contro la nostra interfaccia, e ha
       trovato un difetto: avviso e conferma erano indistinguibili sull'asse
-      rosso-verde. Non l'abbiamo risolto cambiando tinta — contrasto e
-      distinguibilità sono in conflitto diretto — ma aggiungendo un segnale che
-      non dipende dal colore.
+      rosso-verde. Non risolto cambiando tinta — contrasto e distinguibilità
+      sono in conflitto diretto — ma aggiungendo un segnale che non dipende dal colore.
     </p>
-  </section>
+  </div>
+</section>
 
-  <footer>Chrom<span class="mark">Assist</span> · Accessibilità Digitale</footer>
+<script>
+  const slide = [...document.querySelectorAll('.slide')];
+  const barra = document.getElementById('avanzamento');
+  const contatore = document.getElementById('contatore');
+  const marchio = document.getElementById('marchio');
+  const org = document.getElementById('org');
+  let i = 0;
 
-</div>
+  function mostra(n) {
+    const precedente = i;
+    i = Math.max(0, Math.min(slide.length - 1, n));
+    slide.forEach((s, k) => {
+      s.classList.toggle('attiva', k === i);
+      // chi sta prima della slide corrente esce a sinistra, chi sta dopo
+      // entra da destra: la direzione del movimento segue la navigazione
+      s.classList.toggle('uscita-sinistra', k < i);
+    });
+    if (precedente !== i) {
+      const freccia = document.getElementById('direzione');
+      freccia.textContent = i > precedente ? '→' : '←';
+      freccia.style.opacity = '1';
+      clearTimeout(freccia._t);
+      freccia._t = setTimeout(() => (freccia.style.opacity = '0'), 420);
+    }
+    barra.style.width = `${((i + 1) / slide.length) * 100}%`;
+    contatore.textContent = `${String(i + 1).padStart(2, '0')} / ${slide.length}`;
+    // la copertina sta in piedi da sola: marchio e blocco organizzativo
+    // sono già nel suo contenuto
+    const copertina = slide[i].classList.contains('copertina');
+    marchio.style.opacity = copertina ? '0' : '1';
+    org.style.opacity = copertina ? '0' : '1';
+    location.hash = i + 1;
+  }
+
+  const avanti = () => mostra(i + 1);
+  const indietro = () => mostra(i - 1);
+
+  addEventListener('keydown', (e) => {
+    const tasti = {
+      ArrowRight: avanti, ArrowDown: avanti, PageDown: avanti, ' ': avanti,
+      ArrowLeft: indietro, ArrowUp: indietro, PageUp: indietro,
+      Home: () => mostra(0), End: () => mostra(slide.length - 1)
+    };
+    if (tasti[e.key]) { e.preventDefault(); tasti[e.key](); }
+  });
+
+  // clic sulla metà destra avanza, sulla sinistra torna
+  addEventListener('click', (e) => {
+    if (e.target.closest('.cmd')) return; // non rubare la selezione del testo
+    e.clientX > innerWidth / 2 ? avanti() : indietro();
+  });
+
+  mostra(Number(location.hash.slice(1)) - 1 || 0);
+</script>
 </html>

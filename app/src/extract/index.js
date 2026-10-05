@@ -53,11 +53,22 @@ export function estrai(doc) {
 export async function completaDaImmagini(varianti) {
   const esiti = await Promise.all(
     varianti.map(async (v) => {
-      if (v.hex || !v.imageUrl) return v;
+      // Priorità: se la variante ha una FOTOGRAFIA, quella è la fonte
+      // autorevole del colore.
+      //
+      // Il colore eventualmente letto dal DOM per uno swatch con immagine non
+      // è il colore del capo: è lo sfondo su cui la miniatura è disegnata, e
+      // dipende da come il catalogo ha costruito il bottone. Il colore vero
+      // sta nei pixel della foto.
+      if (!v.imageUrl) return v;
+
       const campionato = await campionaImmagine(v.imageUrl);
-      return campionato
-        ? { ...v, hex: campionato.hex, daImmagine: true, multicolore: campionato.multicolore }
-        : v;
+      if (campionato) {
+        return { ...v, hex: campionato.hex, daImmagine: true, multicolore: campionato.multicolore };
+      }
+      // campionamento impossibile: si tiene il colore del DOM se c'era,
+      // altrimenti la variante resta senza colore e lo dichiariamo
+      return { ...v, campionamentoFallito: true };
     })
   );
   return esiti;

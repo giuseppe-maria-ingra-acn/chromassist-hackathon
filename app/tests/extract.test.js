@@ -13,7 +13,7 @@ import { estrai } from '../src/extract/index.js';
 function fakeDoc({ titolo = null, swatch = [], ld = null } = {}) {
   const nodi = swatch.map((s) => ({
     getAttribute: (k) => (k === 'data-variant' ? s.nome : k === 'data-colour-hex' ? s.dataHex ?? null : k === 'data-image' ? s.img ?? null : null),
-    style: { backgroundColor: s.inline ?? '' },
+    style: { backgroundColor: s.inline ?? '', backgroundImage: s.img ? `url(${s.img})` : '' },
     querySelector: () => null
   }));
   return {
@@ -107,5 +107,51 @@ describe('unione dei parser', () => {
     })(doc.querySelectorAll);
     const { varianti } = estrai(doc);
     assert.equal(varianti.length, 1);
+  });
+});
+
+describe('un valore trasparente non è un colore', () => {
+  it('scarta rgba con alpha a zero invece di registrarlo come nero', () => {
+    // un elemento senza background-color proprio restituisce rgba(0,0,0,0).
+    // Accettarlo produce un nero inventato, e l'analisi prosegue su un dato
+    // falso invece di dichiarare che il colore non si conosce.
+    const r = domSwatch(fakeDoc({ swatch: [{ nome: 'con foto', inline: 'rgba(0, 0, 0, 0)' }] }));
+    assert.equal(r[0].hex, null);
+  });
+
+  it('scarta la parola transparent', () => {
+    const r = domSwatch(fakeDoc({ swatch: [{ nome: 'x', inline: 'transparent' }] }));
+    assert.equal(r[0].hex, null);
+  });
+
+  it('accetta un rgba opaco', () => {
+    const r = domSwatch(fakeDoc({ swatch: [{ nome: 'x', inline: 'rgba(41, 37, 38, 1)' }] }));
+    assert.equal(r[0].hex, '#292526');
+  });
+
+  it('il nero vero resta nero', () => {
+    const r = domSwatch(fakeDoc({ swatch: [{ nome: 'x', inline: 'rgb(0, 0, 0)' }] }));
+    assert.equal(r[0].hex, '#000000');
+  });
+});
+
+
+describe('uno swatch con fotografia non prende il colore di fondo', () => {
+  it('ignora il grigio di default del bottone quando c è un immagine', () => {
+    // il caso che ha fatto sbagliare l'analisi: un <button> senza
+    // background-color proprio restituisce buttonface, un grigio chiaro.
+    // Preso per il colore del capo, manda tutto fuori strada.
+    global.getComputedStyle = () => ({ backgroundColor: 'rgb(239, 239, 239)', backgroundImage: 'url(foto.png)' });
+    const r = domSwatch(fakeDoc({ swatch: [{ nome: 'con foto', img: 'foto.png' }] }));
+    assert.equal(r[0].hex, null, 'il grigio del bottone non è il colore della variante');
+    assert.equal(r[0].imageUrl, 'foto.png');
+    delete global.getComputedStyle;
+  });
+
+  it('legge il colore calcolato quando NON c è un immagine', () => {
+    global.getComputedStyle = () => ({ backgroundColor: 'rgb(31, 79, 160)', backgroundImage: 'none' });
+    const r = domSwatch(fakeDoc({ swatch: [{ nome: 'da classe css' }] }));
+    assert.equal(r[0].hex, '#1F4FA0');
+    delete global.getComputedStyle;
   });
 });

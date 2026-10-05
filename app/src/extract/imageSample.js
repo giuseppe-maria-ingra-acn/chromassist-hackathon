@@ -9,7 +9,14 @@
 export function campionaImmagine(url) {
   return new Promise((risolvi) => {
     const im = new Image();
-    im.crossOrigin = 'anonymous';
+
+    // crossOrigin va impostato SOLO per immagini di altra origine.
+    // Su un'immagine della stessa origine trasforma la richiesta in una
+    // richiesta CORS, e un server che non manda Access-Control-Allow-Origin
+    // la fa fallire del tutto — l'immagine non carica, e il colore si perde.
+    // Molti server statici di sviluppo non mandano quell'intestazione.
+    if (altraOrigine(url)) im.crossOrigin = 'anonymous';
+
     im.onerror = () => risolvi(null);
     im.onload = () => {
       try {
@@ -56,4 +63,13 @@ export function campionaImmagine(url) {
     };
     im.src = url;
   });
+}
+
+/** Vero se l'immagine sta su un'origine diversa da quella della pagina. */
+function altraOrigine(url) {
+  try {
+    return new URL(url, location.href).origin !== location.origin;
+  } catch {
+    return false; // percorso relativo non risolvibile: trattalo come locale
+  }
 }

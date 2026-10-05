@@ -1,71 +1,149 @@
 <!doctype html>
+<html lang="it">
 <meta charset="utf-8">
 <title>W QUEST JACKET - Giacca hard shell - burgundy crush</title>
 <!--
   Scheda prodotto di riferimento.
 
-  Riproduce fedelmente la situazione di un catalogo reale: il colore delle
-  varianti è codificato in modi DIVERSI fra loro, e per due varianti non
-  esiste affatto nel markup — vive solo nei pixel della fotografia.
+  Riproduce la struttura e le codifiche di una scheda reale: nomi commerciali,
+  colore espresso in QUATTRO modi diversi nel markup, e due varianti il cui
+  colore non compare affatto — vive solo nei pixel della fotografia.
   Nomi e colori sono quelli misurati sulle foto del catalogo originale.
 -->
 <style>
-  :root { --bordo:#e3e3de; --testo:#15151a; --tenue:#73737d; }
-  * { box-sizing:border-box }
-  body { margin:0; font:15px/1.5 -apple-system,'Helvetica Neue',Arial,sans-serif; color:var(--testo); background:#fff }
-  .scheda { padding:22px 24px 30px }
-  .marca { font-weight:700; letter-spacing:.02em }
-  h1 { font-size:19px; font-weight:400; margin:2px 0 10px; color:var(--tenue) }
-  .prezzo { font-size:21px; font-weight:700; margin-bottom:22px }
-  .etichetta { font-size:12px; text-transform:uppercase; letter-spacing:.09em; color:var(--tenue); margin-bottom:9px }
-  .selezionato { font-size:14px; margin-bottom:12px }
-  .swatch-riga { display:flex; flex-wrap:wrap; gap:10px }
+  :root { --bordo:#e4e4df; --testo:#15151a; --tenue:#71717b; --sconto:#d0021b; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 -apple-system,'Helvetica Neue',Arial,sans-serif;
+         color:var(--testo); background:#fff; }
+
+  .pdp { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,380px); min-height:100vh; }
+
+  /* galleria */
+  .galleria { background:#f4f4f2; padding:22px; display:flex; flex-direction:column; gap:12px; }
+  .scatto { flex:1; border-radius:4px; background:#fff; display:flex; align-items:center;
+            justify-content:center; min-height:320px; overflow:hidden; }
+  .scatto img { width:72%; max-width:340px; border-radius:6px; }
+  .miniature { display:flex; gap:8px; }
+  .miniature div { width:52px; height:66px; border-radius:3px; background:#fff;
+                   border:1px solid var(--bordo); }
+
+  /* informazioni */
+  .info { padding:26px 28px 40px; }
+  .marca { font-weight:700; font-size:16px; letter-spacing:-.01em; }
+  h1 { font-size:17px; font-weight:400; margin:3px 0 14px; color:var(--tenue); }
+  .prezzi { display:flex; align-items:baseline; gap:10px; margin-bottom:4px; }
+  .prezzo { font-size:22px; font-weight:700; color:var(--sconto); }
+  .barrato { font-size:14px; color:var(--tenue); text-decoration:line-through; }
+  .risparmio { font-size:13px; color:var(--sconto); font-weight:600; }
+  .iva { font-size:12px; color:var(--tenue); margin-bottom:24px; }
+
+  .etichetta { font-size:12px; text-transform:uppercase; letter-spacing:.09em;
+               color:var(--tenue); margin-bottom:9px; }
+  .selezionato { font-size:14px; margin-bottom:13px; }
+  .swatch-riga { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:26px; }
+  /* background-color esplicito: un <button> ne ha uno di default (buttonface,
+     un grigio chiaro) che altrimenti si scambia per il colore della variante */
   .swatch { width:46px; height:46px; border-radius:50%; border:1px solid var(--bordo);
-            cursor:pointer; background-size:cover; background-position:center; padding:0 }
-  .swatch[aria-pressed="true"] { outline:2px solid var(--testo); outline-offset:2px }
-  .nota { margin-top:26px; padding-top:16px; border-top:1px solid var(--bordo); font-size:13px; color:var(--tenue) }
-  /* il colore di "estate blue" vive qui, non nel markup della variante */
-  .sw--estate-blue { background-color:#143775 }
+            cursor:pointer; background-color:transparent; background-size:cover;
+            background-position:center; padding:0; }
+  .swatch[aria-pressed="true"] { outline:2px solid var(--testo); outline-offset:2px; }
+
+  .taglie { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+  .taglia { min-width:56px; padding:11px 6px; border:1px solid var(--bordo); border-radius:3px;
+            background:#fff; font:inherit; font-size:14px; cursor:pointer; }
+  .taglia[aria-pressed="true"] { border-color:var(--testo); box-shadow:0 0 0 1px var(--testo) inset; }
+  .taglia:disabled { color:#c4c4bf; cursor:default; text-decoration:line-through; }
+
+  .carrello { width:100%; padding:15px; border:0; border-radius:3px; background:#15151a;
+              color:#fff; font:600 15px inherit; cursor:pointer; margin-bottom:10px; }
+  .preferiti { width:100%; padding:14px; border:1px solid var(--bordo); border-radius:3px;
+               background:#fff; font:500 14px inherit; cursor:pointer; }
+
+  .servizi { margin-top:26px; padding-top:18px; border-top:1px solid var(--bordo);
+             font-size:13px; color:var(--tenue); }
+  .servizi div { margin-bottom:7px; }
+  .nota { margin-top:22px; padding-top:16px; border-top:1px solid var(--bordo);
+          font-size:12px; color:var(--tenue); }
+
+  /* il colore di "estate blue" vive qui, in un foglio di stile,
+     non nel markup della variante */
+  .sw--estate-blue { background-color:#143775; }
+
+  @media (max-width: 860px) { .pdp { grid-template-columns:1fr; } }
 </style>
 
-<div class="scheda">
-  <div class="marca">The North Face</div>
-  <h1 data-product-title="">W QUEST JACKET - Giacca hard shell - burgundy crush</h1>
-  <div class="prezzo">189,95 €</div>
+<div class="pdp">
 
-  <div class="etichetta">Colore</div>
-  <div class="selezionato">Colore attualmente selezionato: <strong>burgundy crush</strong></div>
-
-  <div class="swatch-riga" role="group" aria-label="Scelta del colore">
-    <!-- due varianti SENZA esadecimale nel markup: solo nome e fotografia.
-         Il colore esiste unicamente nei pixel, come sul catalogo vero. -->
-    <button class="swatch" data-variant="burgundy crush"
-            data-image="img/burgundy-crush.svg"
-            style="background-image:url('img/burgundy-crush.svg')"
-            aria-label="burgundy crush" aria-pressed="true"></button>
-    <button class="swatch" data-variant="new taupe green"
-            data-image="img/new-taupe-green.svg"
-            style="background-image:url('img/new-taupe-green.svg')"
-            aria-label="new taupe green" aria-pressed="false"></button>
-
-    <!-- colore in un attributo dati, senza cancelletto -->
-    <button class="swatch" data-variant="garnet" data-colour-hex="AB8877" aria-label="garnet"></button>
-    <button class="swatch" data-variant="pear" data-colour-hex="E2DDA5" aria-label="pear"></button>
-    <button class="swatch" data-variant="frost grey" data-colour-hex="BCC4D5" aria-label="frost grey"></button>
-
-    <!-- colore in una classe CSS, con il valore in un foglio di stile -->
-    <button class="swatch sw--estate-blue" data-variant="estate blue" aria-label="estate blue"></button>
-
-    <!-- colore in stile inline -->
-    <button class="swatch" data-variant="tnf black" style="background-color:#292526" aria-label="tnf black"></button>
-    <button class="swatch" data-variant="white dune" style="background-color:#DCD9D3" aria-label="white dune"></button>
+  <div class="galleria">
+    <div class="scatto"><img id="scatto" src="https://img01.ztat.net/article/spp-media-p1/10f80050e28144d38c1ddb979bb270d2/51fd6388def24c9390f3a69175094b45.jpg?imwidth=400&filter=packshot" alt="Giacca hard shell rosso vinaccia"></div>
+    <div class="miniature"><div></div><div></div><div></div><div></div></div>
   </div>
 
-  <p class="nota">
-    Questa scheda riproduce la codifica di un catalogo reale: nomi commerciali,
-    colori espressi in quattro modi diversi, e due varianti il cui colore non
-    compare nel markup.
-  </p>
+  <div class="info">
+    <div class="marca">The North Face</div>
+    <h1 data-product-title="">W QUEST JACKET - Giacca hard shell - burgundy crush</h1>
+
+    <div class="prezzi">
+      <span class="prezzo">189,95 €</span>
+      <span class="barrato">219,95 €</span>
+      <span class="risparmio">-14%</span>
+    </div>
+    <div class="iva">IVA inclusa, spedizione esclusa</div>
+
+    <div class="etichetta">Colore</div>
+    <div class="selezionato">Colore attualmente selezionato: <strong id="nome-colore">burgundy crush</strong></div>
+
+    <div class="swatch-riga" role="group" aria-label="Scelta del colore">
+      <!-- due varianti SENZA esadecimale nel markup: solo nome e fotografia.
+           Il colore esiste unicamente nei pixel. Le foto sono quelle vere
+           del catalogo, collegate dal CDN originale — non ricopiate nel
+           repository. -->
+      <button class="swatch" data-variant="burgundy crush"
+              data-image="https://img01.ztat.net/article/spp-media-p1/10f80050e28144d38c1ddb979bb270d2/51fd6388def24c9390f3a69175094b45.jpg?imwidth=400&filter=packshot"
+              style="background-image:url('https://img01.ztat.net/article/spp-media-p1/10f80050e28144d38c1ddb979bb270d2/51fd6388def24c9390f3a69175094b45.jpg?imwidth=400&filter=packshot')"
+              aria-label="burgundy crush" aria-pressed="true"></button>
+      <button class="swatch" data-variant="new taupe green"
+              data-image="https://img01.ztat.net/article/spp-media-p1/37d9a4fbe7994c69a5b7f2367d6f21cb/642792ad8fe04a2ab105e675c4e4d8d7.jpg?imwidth=400&filter=packshot"
+              style="background-image:url('https://img01.ztat.net/article/spp-media-p1/37d9a4fbe7994c69a5b7f2367d6f21cb/642792ad8fe04a2ab105e675c4e4d8d7.jpg?imwidth=400&filter=packshot')"
+              aria-label="new taupe green" aria-pressed="false"></button>
+
+      <!-- colore in un attributo dati, senza cancelletto -->
+      <button class="swatch" data-variant="garnet" data-colour-hex="AB8877" aria-label="garnet"></button>
+      <button class="swatch" data-variant="pear" data-colour-hex="E2DDA5" aria-label="pear"></button>
+      <button class="swatch" data-variant="frost grey" data-colour-hex="BCC4D5" aria-label="frost grey"></button>
+
+      <!-- colore in una classe CSS, con il valore in un foglio di stile -->
+      <button class="swatch sw--estate-blue" data-variant="estate blue" aria-label="estate blue"></button>
+
+      <!-- colore in stile inline -->
+      <button class="swatch" data-variant="tnf black" style="background-color:#292526" aria-label="tnf black"></button>
+      <button class="swatch" data-variant="white dune" style="background-color:#DCD9D3" aria-label="white dune"></button>
+    </div>
+
+    <div class="etichetta">Taglia</div>
+    <div class="taglie" role="group" aria-label="Scelta della taglia">
+      <button class="taglia" type="button">XS</button>
+      <button class="taglia" type="button">S</button>
+      <button class="taglia" type="button" aria-pressed="true">M</button>
+      <button class="taglia" type="button">L</button>
+      <button class="taglia" type="button" disabled>XL</button>
+    </div>
+
+    <button class="carrello" type="button">Aggiungi al carrello</button>
+    <button class="preferiti" type="button">Aggiungi ai preferiti</button>
+
+    <div class="servizi">
+      <div>Spedizione gratuita sopra i 24,90 €</div>
+      <div>Reso gratuito entro 100 giorni</div>
+      <div>Consegna stimata: 2-4 giorni lavorativi</div>
+    </div>
+
+    <p class="nota">
+      Questa scheda riproduce la codifica di un catalogo reale: nomi
+      commerciali, colori espressi in quattro modi diversi nel markup, e due
+      varianti il cui colore non vi compare affatto.
+    </p>
+  </div>
 </div>
 
 <script type="application/ld+json">
@@ -86,3 +164,59 @@
   ]
 }
 </script>
+
+<script>
+  // Comportamento minimo di una scheda vera: scegliendo una variante cambiano
+  // il titolo, il nome mostrato e la fotografia. Serve a rendere credibile la
+  // scheda, non fa parte di ChromAssist.
+  const scatto = document.getElementById('scatto');
+  const nome = document.getElementById('nome-colore');
+  const titolo = document.querySelector('[data-product-title]');
+
+  // Dipinge gli swatch che hanno il colore in un attributo dati.
+  // Un attributo non viene disegnato dal browser: serve un passaggio
+  // esplicito, esattamente come fa un catalogo vero.
+  for (const sw of document.querySelectorAll('.swatch[data-colour-hex]')) {
+    sw.style.backgroundColor = '#' + sw.dataset.colourHex.replace(/^#/, '');
+  }
+
+  /** Il colore da mostrare nello scatto grande, per una variante senza foto. */
+  function tintaDi(sw) {
+    const dato = sw.dataset.colourHex;
+    if (dato) return '#' + dato.replace(/^#/, '');
+    const calcolato = getComputedStyle(sw).backgroundColor;
+    return calcolato && calcolato !== 'rgba(0, 0, 0, 0)' ? calcolato : '#d8d8d4';
+  }
+
+  for (const sw of document.querySelectorAll('.swatch')) {
+    sw.addEventListener('click', () => {
+      document.querySelectorAll('.swatch').forEach((s) => s.setAttribute('aria-pressed', 'false'));
+      sw.setAttribute('aria-pressed', 'true');
+
+      const variante = sw.dataset.variant;
+      nome.textContent = variante;
+      titolo.textContent = `W QUEST JACKET - Giacca hard shell - ${variante}`;
+
+      const img = sw.dataset.image;
+      if (img) {
+        scatto.src = img;
+      } else {
+        // per le varianti con il colore nel markup si disegna un rettangolo
+        // pieno: non c'è una fotografia da mostrare
+        const colore = tintaDi(sw);
+        scatto.src = 'data:image/svg+xml,' + encodeURIComponent(
+          `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="160" height="160" fill="#f4f4f2"/><rect x="18" y="12" width="124" height="136" rx="10" fill="${colore}"/></svg>`
+        );
+      }
+      scatto.alt = `Giacca hard shell ${variante}`;
+    });
+  }
+
+  for (const t of document.querySelectorAll('.taglia:not(:disabled)')) {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.taglia').forEach((x) => x.setAttribute('aria-pressed', 'false'));
+      t.setAttribute('aria-pressed', 'true');
+    });
+  }
+</script>
+</html>

@@ -63,6 +63,10 @@ function costruisciTest() {
     b.setAttribute('aria-pressed', 'false');
     b.setAttribute('aria-label', `${c.nota}: segna se ti sembrano lo stesso colore`);
 
+    const casella = document.createElement('span');
+    casella.className = 'casella';
+    casella.textContent = '\u2713';
+
     const punti = document.createElement('span');
     punti.className = 'punti';
     punti.append(punto(c.a), punto(c.b));
@@ -75,14 +79,23 @@ function costruisciTest() {
     segno.className = 'segno';
     segno.textContent = 'uguali';
 
-    b.append(punti, et, segno);
+    b.append(casella, punti, et, segno);
     b.addEventListener('click', () => {
       const ora = b.getAttribute('aria-pressed') !== 'true';
       b.setAttribute('aria-pressed', String(ora));
       ora ? stato.segnate.add(c.id) : stato.segnate.delete(c.id);
+      aggiornaConteggio();
     });
     contenitore.append(b);
   }
+}
+
+function aggiornaConteggio() {
+  const n = stato.segnate.size;
+  el('conteggio').textContent = n === 0
+    ? 'Nessuna coppia segnata — se le distingui tutte, prosegui pure.'
+    : `${n} ${n === 1 ? 'coppia segnata' : 'coppie segnate'}.`;
+  el('conferma').textContent = n === 0 ? 'Prosegui' : `Analizza la pagina (${n})`;
 }
 
 /* ---------- esito ---------- */
@@ -184,6 +197,21 @@ function mostraEsito() {
   conf.append(fila('come li vedi tu', stato.varianti.map((v) => (v.hex ? simula(v.hex, prof, sev) : null))));
   sezione.append(h, conf);
 
+  /* provenienza dei colori: rende visibile cosa ha funzionato e cosa no,
+     invece di lasciare l'utente davanti a un risultato inspiegabile */
+  const prov = document.createElement('div');
+  prov.className = 'provenienza';
+  const riga = (v) => {
+    const fonte = v.daImmagine ? 'fotografia'
+      : v.daRiferimento ? 'dati di riferimento'
+      : v.campionamentoFallito ? 'FOTO NON LETTA'
+      : v.hex ? 'markup'
+      : 'NESSUNA';
+    return `${v.nome}: ${v.hex ?? '—'} (${fonte})`;
+  };
+  prov.textContent = stato.varianti.map(riga).join('  ·  ');
+  sezione.append(prov);
+
   /* dettaglio variante */
   const dett = document.createElement('div');
   dett.id = 'dettaglio';
@@ -260,6 +288,7 @@ function mostraDettaglio(nome) {
 /* ---------- avvio ---------- */
 
 costruisciTest();
+aggiornaConteggio();
 el('conferma').addEventListener('click', () => {
   const r = profiloDa([...stato.segnate]);
   stato.profilo = r.profilo;

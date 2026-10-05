@@ -27,16 +27,26 @@
   h2:first-of-type { margin-top:0 }
 
   .coppie { display:flex; flex-direction:column; gap:8px }
-  .coppia { display:flex; align-items:center; gap:12px; padding:9px 12px; border:1px solid var(--bordo);
-            border-radius:9px; cursor:pointer; background:#fff; text-align:left; font:inherit; width:100% }
-  .coppia:hover { border-color:#c9c9c2 }
-  .coppia[aria-pressed="true"] { border-color:var(--accento); box-shadow:0 0 0 1px var(--accento) inset }
+  .coppia { display:flex; align-items:center; gap:12px; padding:11px 13px; border:1.5px solid var(--bordo);
+            border-radius:10px; cursor:pointer; background:#fff; text-align:left; font:inherit; width:100%;
+            transition:border-color .12s, background .12s }
+  .coppia:hover { border-color:#b9b9b2; background:#fafaf8 }
+  /* La selezione deve essere inequivocabile: chi usa questo strumento non
+     distingue bene i colori, quindi il riscontro non può essere affidato a
+     una sfumatura di bordo. Casella, riempimento e testo cambiano insieme. */
+  .coppia[aria-pressed="true"] { border-color:var(--accento); background:#f4f1fb }
+  .casella { width:20px; height:20px; border:1.5px solid #c4c4bd; border-radius:5px; flex:0 0 auto;
+             display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff;
+             font-weight:700; line-height:1 }
+  .coppia[aria-pressed="true"] .casella { background:var(--accento); border-color:var(--accento) }
   .coppia .punti { display:flex; gap:5px; flex:0 0 auto }
-  .punto { width:26px; height:26px; border-radius:50%; border:1px solid rgba(0,0,0,.14) }
+  .punto { width:28px; height:28px; border-radius:50%; border:1px solid rgba(0,0,0,.14) }
   .coppia .et { font-size:13px; color:var(--tenue) }
-  .coppia[aria-pressed="true"] .et { color:var(--testo) }
-  .segno { margin-left:auto; font-size:12px; color:var(--accento); opacity:0; flex:0 0 auto }
+  .coppia[aria-pressed="true"] .et { color:var(--testo); font-weight:500 }
+  .segno { margin-left:auto; font-size:11px; color:var(--accento); font-weight:600; opacity:0;
+           flex:0 0 auto; text-transform:uppercase; letter-spacing:.06em }
   .coppia[aria-pressed="true"] .segno { opacity:1 }
+  .conteggio { font-size:13px; color:var(--tenue); margin-top:12px; text-align:center }
 
   button.azione { margin-top:14px; width:100%; padding:11px; border:0; border-radius:9px;
                   background:var(--accento); color:#fff; font:600 14.5px inherit; cursor:pointer }
@@ -77,6 +87,8 @@
   .dettaglio dt:first-child { margin-top:0 }
   .dettaglio dd { margin:2px 0 0 }
   .limite { font-size:12px; color:var(--tenue); margin-top:22px; padding-top:14px; border-top:1px solid var(--bordo) }
+  .provenienza { font-size:11.5px; color:var(--tenue); margin-top:18px; padding-top:12px;
+                 border-top:1px dashed var(--bordo) }
   .nascosto { display:none }
 </style>
 
@@ -98,7 +110,8 @@
         Toccane quante ne riconosci — se nessuna, va bene così.
       </p>
       <div class="coppie" id="coppie"></div>
-      <button class="azione" id="conferma">Continua</button>
+      <div class="conteggio" id="conteggio"></div>
+      <button class="azione" id="conferma">Prosegui</button>
     </section>
 
     <section id="fase-esito" class="nascosto"></section>

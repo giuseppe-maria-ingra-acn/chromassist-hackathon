@@ -6,6 +6,6 @@
   "description": "Rende leggibili i colori delle varianti prodotto a chi ha una deficienza della visione dei colori",
   "scripts": {
     "test": "node --test tests/",
-    "dev": "python3 -m http.server 4173"
+    "dev": "python3 serve.py"
   }
 }
