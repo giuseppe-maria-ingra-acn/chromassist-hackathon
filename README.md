@@ -3,7 +3,7 @@
 Rende leggibili i colori delle varianti prodotto a chi ha una deficienza della
 visione dei colori (CVD).
 
-Su una scheda prodotto il colore si scegli da pallini senza etichetta. Chi non li
+Su una scheda prodotto il colore si sceglie da pallini senza etichetta. Chi non li
 distingue ha come unica fonte il nome — e i nomi sono `forest night`,
 `magnet/pebble`, `streamsong`. ChromAssist traduce il nome commerciale nel colore
 reale, e il colore reale in come quella persona lo percepirà, segnalando quali

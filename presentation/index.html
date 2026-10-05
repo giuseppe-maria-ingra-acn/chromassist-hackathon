@@ -154,7 +154,7 @@
       </div>
       <div>
         <p class="guida">
-          Su una scheda prodotto il colore si scegli da pallini senza etichetta.
+          Su una scheda prodotto il colore si sceglie da pallini senza etichetta.
           Chi non li distingue ha come unica fonte il nome.
         </p>
         <h4>e i nomi sono questi</h4>
@@ -250,6 +250,66 @@
   <!-- 4 -->
   <section class="sez">
     <div class="sez-head">
+      <div class="sez-num">Il nucleo tecnico</div>
+      <h2>Matematica, non un modello linguistico</h2>
+    </div>
+
+    <p class="guida">
+      La simulazione di una deficienza della visione è una trasformazione
+      matematica esatta. Chiederla a un LLM significherebbe pagare una stima
+      non riproducibile, più lenta e meno accurata.
+    </p>
+
+    <div class="cols">
+      <div>
+        <h3>Come appare un colore</h3>
+        <p class="sottotono" style="font-style:normal;color:rgba(255,255,255,0.72)">
+          Matrici di <strong style="color:#fff">Machado, Oliveira &amp; Fernandes
+          (2009)</strong>, IEEE TVCG — peer-reviewed, oltre 300 citazioni.
+          Applicate in <strong style="color:#fff">RGB lineare</strong>: farlo in
+          sRGB produce valori plausibili e sbagliati, l'errore che non si nota.
+        </p>
+      </div>
+      <div>
+        <h3>Quali colori si confondono</h3>
+        <p class="sottotono" style="font-style:normal;color:rgba(255,255,255,0.72)">
+          <strong style="color:#fff">ΔE2000</strong> fra i colori
+          <em>simulati</em>, non fra gli originali. Non la distanza euclidea in
+          Lab: sovrastima i blu e sottostima i verdi, e la soglia diventerebbe
+          inaffidabile.
+        </p>
+      </div>
+    </div>
+
+    <h4>il criterio ha due condizioni, e la seconda è quella che conta</h4>
+    <div class="rilievo">
+      <p>
+        <strong>vicinanza</strong> — i colori percepiti distano meno della soglia<br>
+        <strong>crollo</strong> — la distanza percepita è una frazione di quella reale
+      </p>
+    </div>
+    <p class="sottotono">
+      Senza la seconda condizione segnaleremmo anche due bianchi sporchi, simili
+      per chiunque. Ci interessano solo le coppie che la deficienza
+      <em>avvicina</em>: colori che il venditore presenta come alternative
+      distinte e che per questa persona diventano la stessa cosa. È la
+      differenza fra un avviso azionabile e rumore.
+    </p>
+
+    <h4>verificato contro riferimenti esterni</h4>
+    <pre class="cmd">ΔE2000(bianco, nero) = 100.00     ← valore canonico CIEDE2000
+blu puro, asse rosso-verde        ← il meno alterato: il cono del blu è intatto
+grigi su ogni profilo             ← restano acromatici</pre>
+    <p class="sottotono">
+      47 test, offline, senza dipendenze. La soglia non è un numero scelto a
+      occhio: è calibrata contro coppie con verità misurata su fotografie reali,
+      e quel test è la specifica.
+    </p>
+  </section>
+
+  <!-- 5 -->
+  <section class="sez">
+    <div class="sez-head">
       <div class="sez-num">Dove interviene l'AI</div>
       <h2>Nel costruirlo, non nell'usarlo</h2>
     </div>
@@ -283,12 +343,40 @@
       </div>
     </div>
     <p class="sottotono" style="margin-top:20px">
-      Gli strumenti sono stati scritti prima del codice, e usati per scriverlo.
-      La cronologia del progetto lo mostra.
+      Gli strumenti sono stati scritti <strong style="color:#fff;font-style:normal">prima</strong>
+      del codice, e usati per scriverlo: la skill sulla simulazione precede il
+      modulo che la implementa. La cronologia dei commit lo mostra.
+    </p>
+
+    <h4>i vincoli non dipendono dalla memoria di nessuno</h4>
+    <div class="tris">
+      <div class="carta">
+        <div class="c-num">hook</div><h5>Zero dipendenze</h5>
+        <p>Una modifica che aggiunga un pacchetto viene rifiutata mentre la scrivi, con il motivo.</p>
+      </div>
+      <div class="carta">
+        <div class="c-num">hook</div><h5>Test sul nucleo</h5>
+        <p>Dopo ogni modifica a <span class="nomi">colorlab</span> i 47 test girano da soli.</p>
+      </div>
+      <div class="carta">
+        <div class="c-num">CI</div><h5>Per chiunque</h5>
+        <p>Lo stesso divieto a ogni pull request: un vincolo valido per una parte sola non è un vincolo.</p>
+      </div>
+    </div>
+
+    <h4>e l'eval decide una cosa concreta</h4>
+    <p class="sottotono" style="font-style:normal;color:rgba(255,255,255,0.72)">
+      Su quale livello di modello far girare l'agente che ispeziona le pagine.
+      Quattro criteri binari su tre casi con verità nota — perché una
+      valutazione a sensazione non permette di confrontare due modelli. Il
+      criterio che discrimina è <strong style="color:#fff">dichiarare l'assenza</strong>
+      di un esadecimale invece di inventarne uno plausibile: è il fallimento più
+      probabile di un modello più debole, ed è anche il peggiore, perché produce
+      un'analisi sbagliata con l'apparenza della completezza.
     </p>
   </section>
 
-  <!-- 5 -->
+  <!-- 6 -->
   <section class="sez">
     <div class="sez-head">
       <div class="sez-num">Il miglioramento</div>
@@ -310,7 +398,7 @@
     </div>
   </section>
 
-  <!-- 6 -->
+  <!-- 7 -->
   <section class="sez">
     <div class="sez-head">
       <div class="sez-num">Come si prova</div>
@@ -348,7 +436,7 @@ node --test tests/</pre>
     </p>
   </section>
 
-  <!-- 7 -->
+  <!-- 8 -->
   <section class="sez limiti">
     <div class="sez-head">
       <div class="sez-num">Limiti e rischi</div>
