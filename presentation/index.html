@@ -145,7 +145,6 @@
     .cols, .tris { grid-template-columns: 1fr; gap: 18px; }
   }
 </style>
-
 <div class="avanzamento" id="avanzamento"></div>
 <div class="marchio" id="marchio">Chrom<span class="mark">Assist</span></div>
 <div class="org" id="org"><div class="a">Accenture</div><div class="b">Application Engineering</div></div>
@@ -165,7 +164,7 @@
   </div>
 </section>
 
-<!-- 2 — il problema, la scala -->
+<!-- 2 — il problema -->
 <section class="slide">
   <div class="corpo">
     <div class="occhio">Il problema</div>
@@ -183,29 +182,17 @@
         <p class="nomi" style="font-size:clamp(14px,1.3vw,18px)">forest night<br>magnet/pebble<br>streamsong<br>aubergine</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- 3 — il problema, la misura -->
-<section class="slide">
-  <div class="corpo">
-    <div class="occhio">Il problema</div>
-    <h2>E a volte il nome è sbagliato</h2>
     <div class="rilievo">
       <p>
         Su <strong>96 capi</strong> di un catalogo reale: 54 nomi colore
-        diversi, <strong>nessun valore leggibile da una macchina</strong>, e un
-        prodotto chiamato <span class="nomi">black</span> che nella foto è marrone.
+        diversi, nessun valore leggibile da una macchina, e un prodotto
+        chiamato <span class="nomi">black</span> che nella foto è marrone.
       </p>
     </div>
-    <p class="tenue">
-      Chi vede normalmente apre la foto e se ne accorge. Chi non distingue i
-      colori no: per lui il testo è l'unica fonte, e il testo è sbagliato.
-    </p>
   </div>
 </section>
 
-<!-- 4 — l'utente -->
+<!-- 3 — l'utente -->
 <section class="slide">
   <div class="corpo">
     <div class="occhio">L'utente</div>
@@ -228,10 +215,10 @@
   </div>
 </section>
 
-<!-- 5 — la soluzione -->
+<!-- 4 — come funziona -->
 <section class="slide">
   <div class="corpo">
-    <div class="occhio">La soluzione</div>
+    <div class="occhio">Come funziona</div>
     <h2>Due traduzioni, in sequenza</h2>
     <div class="cols">
       <div>
@@ -250,10 +237,14 @@
         </p>
       </div>
     </div>
+    <p class="nota" style="margin-top:26px">
+      Il nome scelto dal venditore resta sempre scritto: aggiungiamo
+      informazione, non la riscriviamo.
+    </p>
   </div>
 </section>
 
-<!-- 6 — la prova -->
+<!-- 5 — la prova -->
 <section class="slide">
   <div class="corpo">
     <div class="occhio">La prova</div>
@@ -277,96 +268,44 @@
       Distanza fra i due colori: <strong>29,5</strong> nella realtà,
       <strong>7,5</strong> come li vede lui.
     </p>
-    <p class="nota" style="margin-top:12px">
-      Il nome scelto dal venditore resta sempre scritto: aggiungiamo
-      informazione, non la riscriviamo. È una proprietà verificata da un test.
-    </p>
   </div>
 </section>
 
-<!-- 7 — il nucleo tecnico -->
+<!-- 6 — il nucleo -->
 <section class="slide">
   <div class="corpo">
-    <div class="occhio">Il nucleo tecnico</div>
+    <div class="occhio">Il nucleo</div>
     <h2>Matematica, non un modello linguistico</h2>
     <p class="tenue">
-      Simulare una deficienza della visione è una trasformazione esatta.
-      Chiederla a un modello significherebbe pagare una stima non riproducibile,
-      più lenta e meno accurata.
+      Simulare una deficienza della visione è una trasformazione esatta, con un
+      modello scientifico pubblicato e validato. Chiederla a un modello
+      linguistico significherebbe pagare una stima non riproducibile, più lenta
+      e meno accurata.
     </p>
-    <div class="cols" style="margin-top:8px">
-      <div>
-        <h3>Come appare un colore</h3>
-        <p style="font-size:clamp(14px,1.2vw,17px)" class="tenue">
-          Matrici di <strong>Machado, Oliveira &amp; Fernandes (2009)</strong>,
-          IEEE TVCG — peer-reviewed, oltre 300 citazioni. Applicate in
-          <strong>RGB lineare</strong>: in sRGB darebbero valori plausibili e
-          sbagliati, l'errore che non si nota.
-        </p>
-      </div>
-      <div>
-        <h3>Quali colori si confondono</h3>
-        <p style="font-size:clamp(14px,1.2vw,17px)" class="tenue">
-          <strong>ΔE2000</strong> fra i colori <em>simulati</em>, non fra gli
-          originali. Non la distanza euclidea in Lab: sovrastima i blu e
-          sottostima i verdi, e la soglia diventerebbe inaffidabile.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 8 — il criterio -->
-<section class="slide">
-  <div class="corpo">
-    <div class="occhio">Il criterio</div>
-    <h2>Due condizioni, e la seconda è quella che conta</h2>
     <div class="rilievo">
       <p>
-        <strong>vicinanza</strong> — i colori percepiti distano meno della soglia<br>
-        <strong>crollo</strong> — la distanza percepita è una frazione di quella reale
+        Il risultato è <strong>istantaneo e sempre identico</strong>: muovendo
+        il cursore i colori si ricalcolano in tempo reale. Con una chiamata a un
+        modello sarebbe impossibile.
       </p>
     </div>
-    <p class="tenue">
-      Senza la seconda segnaleremmo anche due bianchi sporchi, simili per
-      chiunque. Ci interessano solo le coppie che la deficienza
-      <strong>avvicina</strong>: colori che il venditore presenta come
-      alternative distinte e che per questa persona diventano la stessa cosa.
-    </p>
     <p class="nota">
-      È la differenza fra un avviso su cui si può agire e del rumore.
+      Matrici di Machado, Oliveira &amp; Fernandes (2009), IEEE TVCG —
+      peer-reviewed, oltre 300 citazioni. Le soglie non sono scelte a occhio:
+      sono calibrate contro coppie misurate su fotografie reali.
     </p>
   </div>
 </section>
 
-<!-- 9 — la verifica -->
-<section class="slide">
-  <div class="corpo">
-    <div class="occhio">La verifica</div>
-    <h2>Riferimenti esterni, non autoreferenziali</h2>
-    <pre class="cmd">ΔE2000(bianco, nero) = 100.00     ← valore canonico CIEDE2000
-blu puro, asse rosso-verde        ← il meno alterato: il cono del blu è intatto
-grigi, su ogni profilo            ← restano acromatici</pre>
-    <p class="tenue">
-      <strong>53 test</strong>, offline, senza dipendenze, in meno di un secondo.
-    </p>
-    <p class="nota">
-      La soglia non è un numero scelto a occhio: è calibrata contro coppie con
-      verità misurata su fotografie reali, e quel test è la specifica — non un
-      controllo fatto dopo.
-    </p>
-  </div>
-</section>
-
-<!-- 10 — dove interviene l'AI -->
+<!-- 7 — dove interviene l'AI -->
 <section class="slide">
   <div class="corpo">
     <div class="occhio">Dove interviene l'AI</div>
     <h2>Nel costruirlo, non nell'usarlo</h2>
     <div class="rilievo">
       <p>
-        L'applicazione finita <strong>non chiama nessun servizio</strong>:
-        nessuna chiave, nessun costo, nessuna connessione. Si apre e funziona.
+        L'applicazione finita <strong>non chiama nessun servizio esterno</strong>:
+        nessuna chiave, nessun costo, nessun account. Si apre e funziona.
       </p>
     </div>
     <p class="tenue">
@@ -377,60 +316,20 @@ grigi, su ogni profilo            ← restano acromatici</pre>
     <h4>gli agenti hanno lavorato qui</h4>
     <div class="tris">
       <div class="carta"><div class="c-num">01</div><h5>Ha indagato</h5>
-        <p>Ha ispezionato i cataloghi veri e riportato dove si nasconde il colore. Da lì i lettori di pagina.</p></div>
+        <p>Ha ispezionato i cataloghi veri e riportato dove si nasconde il colore.</p></div>
       <div class="carta"><div class="c-num">02</div><h5>Ha verificato</h5>
         <p>Ha controllato la matematica contro valori di riferimento pubblicati.</p></div>
       <div class="carta"><div class="c-num">03</div><h5>Ha riletto</h5>
         <p>Ha riletto ogni frase dal punto di vista di chi non vede quei colori.</p></div>
     </div>
-  </div>
-</section>
-
-<!-- 11 — i vincoli meccanici -->
-<section class="slide">
-  <div class="corpo">
-    <div class="occhio">La struttura agentica</div>
-    <h2>I vincoli non dipendono dalla memoria di nessuno</h2>
-    <div class="tris">
-      <div class="carta"><div class="c-num">hook</div><h5>Zero dipendenze</h5>
-        <p>Una modifica che aggiunga un pacchetto viene rifiutata mentre la scrivi, con il motivo.</p></div>
-      <div class="carta"><div class="c-num">hook</div><h5>Test sul nucleo</h5>
-        <p>Dopo ogni modifica a <span class="nomi">colorlab</span> i 53 test girano da soli.</p></div>
-      <div class="carta"><div class="c-num">CI</div><h5>Per chiunque</h5>
-        <p>Lo stesso divieto a ogni pull request: un vincolo valido per una parte sola non è un vincolo.</p></div>
-    </div>
-    <p class="nota" style="margin-top:24px">
+    <p class="nota" style="margin-top:22px">
       Gli strumenti sono stati scritti <strong>prima</strong> del codice e usati
-      per scriverlo: la skill sulla simulazione precede il modulo che la
-      implementa, e la cronologia dei commit lo mostra.
+      per scriverlo. La cronologia dei commit lo mostra.
     </p>
   </div>
 </section>
 
-<!-- 12 — l'eval -->
-<section class="slide">
-  <div class="corpo">
-    <div class="occhio">L'eval</div>
-    <h2>Decide una cosa concreta</h2>
-    <p class="tenue">
-      Su quale livello di modello far girare l'agente che ispeziona le pagine.
-      Quattro criteri binari su tre casi con verità nota — perché una valutazione
-      a sensazione non permette di confrontare due modelli.
-    </p>
-    <div class="rilievo">
-      <p>
-        Il criterio che discrimina: <strong>dichiarare l'assenza</strong> di un
-        esadecimale, invece di inventarne uno plausibile.
-      </p>
-    </div>
-    <p class="nota">
-      È il fallimento più probabile di un modello più debole, ed è anche il
-      peggiore: produce un'analisi sbagliata con l'apparenza della completezza.
-    </p>
-  </div>
-</section>
-
-<!-- 13 — il miglioramento -->
+<!-- 8 — il miglioramento -->
 <section class="slide">
   <div class="corpo">
     <div class="occhio">Il miglioramento</div>
@@ -450,53 +349,26 @@ grigi, su ogni profilo            ← restano acromatici</pre>
   </div>
 </section>
 
-<!-- 14 — come si prova -->
-<section class="slide">
-  <div class="corpo">
-    <div class="occhio">Come si prova</div>
-    <h2>Due minuti, nessuna installazione</h2>
-    <div class="cols">
-      <div>
-        <h3>L'applicazione</h3>
-        <pre class="cmd">cd app
-python3 serve.py</pre>
-      </div>
-      <div>
-        <h3>I test</h3>
-        <pre class="cmd">cd app
-node --test tests/</pre>
-      </div>
-    </div>
-    <h4>e gli strumenti girano davvero</h4>
-    <pre class="cmd">node tools/verifica-palette.mjs "#2E7D32" "#C62828"
-  → 63 reale → 6.8 percepita · 1 coppia resa indistinguibile</pre>
-    <p class="nota">
-      Verde «disponibile» contro rosso «esaurito»: la codifica più diffusa negli
-      e-commerce, e due stati opposti che diventano lo stesso colore. Lo stesso
-      motore puntato su chi progetta, non su chi compra.
-    </p>
-  </div>
-</section>
-
-<!-- 15 — limiti -->
+<!-- 9 — limiti -->
 <section class="slide limiti">
   <div class="corpo">
     <div class="occhio">Limiti e rischi</div>
     <h2>Cosa questo strumento non fa</h2>
     <ul class="bullets">
-      <li><strong>Il colore è stimato da una fotografia</strong>, non misurato sul
-          tessuto: dipende da luce, post-produzione e compressione.</li>
-      <li><strong>Un capo multicolore rompe l'ipotesi</strong> del colore dominante.
-          Quando accade lo dichiariamo, invece di inventare un valore.</li>
-      <li><strong>Le soglie sono una media statistica</strong>, non la vista di una
-          persona precisa. Per questo il cursore resta in mano all'utente.</li>
+      <li><strong>Il colore è stimato da una fotografia</strong>, non misurato
+          sul tessuto: dipende da luce, post-produzione e compressione.</li>
+      <li><strong>Un capo multicolore rompe l'ipotesi</strong> del colore
+          dominante. Quando accade lo dichiariamo, invece di inventare un valore.</li>
+      <li><strong>Le soglie sono una media statistica</strong>, non la vista di
+          una persona precisa. Per questo il cursore resta in mano all'utente.</li>
       <li><strong>Non decide al posto suo.</strong> Mostra, spiega, e si ferma.</li>
     </ul>
     <p class="nota" style="margin-top:24px">
       Abbiamo puntato lo strumento anche contro la nostra interfaccia, e ha
       trovato un difetto: avviso e conferma erano indistinguibili sull'asse
       rosso-verde. Non risolto cambiando tinta — contrasto e distinguibilità
-      sono in conflitto diretto — ma aggiungendo un segnale che non dipende dal colore.
+      sono in conflitto diretto — ma aggiungendo un segnale che non dipende
+      dal colore.
     </p>
   </div>
 </section>
